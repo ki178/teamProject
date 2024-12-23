@@ -82,7 +82,6 @@ function sendCheckboxStatus(checkbox) {
 function calculateTotal() {
     const formData = new FormData();
     let totalItemPrice = 0;
-    let hasCheckedItems = false;
     document.querySelectorAll('.item').forEach(item => {
         const checkbox = item.querySelector('.checkbox');
         if (!checkbox) {
@@ -98,15 +97,17 @@ function calculateTotal() {
             const $itemId = $itemIdElement.value.trim();
             const $itemPrice =  parseInt($itemPriceElement.innerText.replace(/[^0-9]/g, ''), 10);
             if (!$itemId || isNaN($itemPrice)){
-                console.error("Invalid itemId or itemPrice:", { $itemId, $itemPrice });
+
                 return;
             }
             formData.append('itemId', $itemId);
-            formData.append('itemPrice', $itemPrice);
+            formData.append('itemPrice', $itemPrice.toString());
             totalItemPrice += $itemPrice;
-            hasCheckedItems = true;
+
         }
     });
+
+
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -118,37 +119,25 @@ function calculateTotal() {
         }
 
             const response = JSON.parse(xhr.responseText);
-            updateUI(response['totalPrice']);
+            const totalPrice = response['totalPrice'] || 0;
+            updateUI(totalPrice);
 
-            function updateUI(totalPrice) {
-                if (totalPrice > 0) {
-                    // 체크된 항목이 있을 때
-                    const priceText = totalPrice > 0 ? `${totalPrice.toLocaleString()} 원` : `0 원`;
-                    const buttonText = totalPrice > 0 ? `${totalPrice.toLocaleString()} 원 주문하기` : `상품을 선택해주세요`;
-                    // 상품 금액 영역 업데이트
-                    document.querySelector('.pay > .price').innerText = priceText;
-                    // 결제 예정 금액 업데이트
-                    document.querySelector('.total-pay > .price').innerText = priceText;
-                    // 주문하기 버튼 업데이트
-                    document.querySelector('.pay-button').innerText = buttonText;
-                    //
-                    document.querySelector('.items-price > ._text').innerText = `상품 ${totalPrice.toLocaleString()} 원 + 배송비 무료`;
-                    document.querySelector('.total-price').innerText = priceText;
-                } else {
-                    // 체크된 항목이 없을 때
-                    const priceText = totalPrice > 0 ? `${totalPrice.toLocaleString()} 원` : `0 원`;
-                    const buttonText = totalPrice > 0 ? `${totalPrice.toLocaleString()} 원 주문하기` : `상품을 선택해주세요`;
-                    // 상품 금액 영역 업데이트
-                    document.querySelector('.pay > .price').innerText = priceText;
-                    // 결제 예정 금액 업데이트
-                    document.querySelector('.total-pay > .price').innerText = priceText;
-                    // 주문하기 버튼 업데이트
-                    document.querySelector('.pay-button').innerText = buttonText;
-                    //
-                    document.querySelector('.items-price > ._text').innerText = `상품 0 원 + 배송비 무료`;
-                    document.querySelector('.total-price').innerText = priceText;
-                }
+        function updateUI(totalPrice) {
+            const priceText = `${totalPrice.toLocaleString()} 원`;
+            const buttonText = totalPrice > 0 ? `${priceText} 주문하기` : "상품을 선택해주세요";
+
+            document.querySelector('.pay > .price').innerText = priceText;
+            document.querySelector('.total-pay > .price').innerText = priceText;
+            document.querySelector('.pay-button').innerText = buttonText;
+
+            if (totalPrice === 0) {
+                document.querySelector('.items-price > ._text').innerText = `상품 0 원 + 배송비 무료`;
+                document.querySelector('.total-price').innerText = "0 원";
+            } else {
+                document.querySelector('.items-price > ._text').innerText = `상품 ${totalPrice.toLocaleString()} 원 + 배송비 무료`;
+                document.querySelector('.total-price').innerText = priceText;
             }
+        }
 
 
     };

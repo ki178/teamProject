@@ -574,7 +574,7 @@ button, select {
   background-color: rgb(229.5, 229.5, 229.5);
 }
 #shipping-container > .request-container > .request-text-container > .no-request > .button-cover > .test.visible {
-  display: flex;
+  display: block;
   margin-top: 10px;
   animation: fadeIn 0.3s ease;
 }

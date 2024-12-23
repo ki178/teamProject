@@ -14,4 +14,5 @@ public class CartEntity {
  private int quantity;
  private int isChecked;
  private boolean isDeleted;
+ private int status;
 }

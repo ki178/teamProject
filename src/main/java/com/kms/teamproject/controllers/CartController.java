@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -87,12 +88,21 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> calculateTotalPrice( @RequestParam(value = "itemId", required = false) List<Integer> itemIds,
                                                                      @RequestParam(value = "itemPrice", required = false) List<Integer> itemPrices) {
-        if (itemIds == null || itemPrices == null || itemIds.size() != itemPrices.size()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid input data"));
+        if (itemIds == null || itemPrices == null || itemIds.isEmpty() || itemPrices.isEmpty()) {
+            return ResponseEntity.ok(Map.of("totalPrice", 0));
         }
 
-        int totalPrice = this.cartService.calculateTotalPrice(itemIds, itemPrices);
-        return ResponseEntity.ok(Map.of("totalPrice", totalPrice));
+        try {
+            List<Integer> itemIdNumbers = itemIds.stream().map(Integer::valueOf).toList();
+            List<Integer> itemPriceNumbers = itemPrices.stream().map(Integer::valueOf).toList();
+            if (itemIdNumbers.size() != itemPriceNumbers.size()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid input data"));
+            }
+            int totalPrice = this.cartService.calculateTotalPrice(itemIds, itemPrices);
+            return ResponseEntity.ok(Map.of("totalPrice", totalPrice));
+        }catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid number format"));
+        }
     }
 
 
