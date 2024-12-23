@@ -4,21 +4,28 @@ const $itemContainer = document.getElementById('item-container');
 const $pay = document.getElementById('pay');
 
 
-// function selectAll(selectAll) {
-//     const $checkboxes = document.getElementsByName('check');
-//     $checkboxes.forEach((checkbox) => {
-//         checkbox.checked = selectAll.checked;
-//         sendCheckboxStatus(checkbox);
-//     });
-//     calculateTotal();
-// }
+function selectAll(selectAll) {
+    const $checkboxes = document.getElementsByName('check');
+    $checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAll.checked;
+        sendCheckboxStatus(checkbox);
+    });
+    calculateTotal();
+}
 
 // 개별 checkbox 클릭 이벤트 추가
 document.addEventListener('DOMContentLoaded', () => {
     // 체크박스 초기 상태에 따라 총합 계산
     document.querySelectorAll('.checkbox').forEach(checkbox => {
         const currentItem = checkbox.closest('.item');
-        const itemId = currentItem.querySelector('.id').value;
+        if (!currentItem){
+            return;
+        }
+        const itemIdElement = currentItem.querySelector('.id');
+        const itemPriceElement = currentItem.querySelector('.itemPrice');
+        if (!itemIdElement || !itemPriceElement){
+            return;
+        }
 
         // 초기 체크 상태 기반으로 동작
         if (checkbox.checked){
@@ -70,9 +77,6 @@ function sendCheckboxStatus(checkbox) {
     xhr.send(formData);
 
 }
-
-
-
 
 // 총합 계산
 function calculateTotal() {
@@ -160,137 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
             calculateTotal();
         });
     });
-    // const selectAllCheckbox = document.getElementById('selectAll');
-    // if (selectAllCheckbox) {
-    //     selectAllCheckbox.addEventListener('change', () => selectAll(selectAllCheckbox));
-    // }
+
 
     calculateTotal(); // 페이지 로드 시 총합 계산
 });
-
-
-
-// { 플러스와 마이너스 개별
-//     const $payPrice = $pay.querySelector(':scope > .price');
-//     const $itemPriceBefore = document.querySelector('.itemPrice');
-//     const $quantity = document.querySelectorAll('.quantity');
-//     $quantity.forEach(product => {
-//         const minusButton = product.querySelector('.minus');
-//         const plusButton = product.querySelector('.plus');
-//
-//         let previousResult = null; // 이전 결과를 저장하는 변수
-//         let repeatCount = 0; // 연속된 결과의 횟수를 카운트
-//
-//         plusButton.addEventListener('click', (event) => {
-//
-//             // 현재 클릭한 버튼의 상위 .item 요소를 찾음
-//             const currentItem = event.currentTarget.closest('.item');
-//
-//             // 현재 .item 요소 내에서 필요한 값 가져오기
-//             const $quantity = currentItem.querySelector('.quantity > .num');
-//             const $itemPrice = currentItem.querySelector('.itemPrice');
-//             const $itemId = currentItem.querySelector('.id');
-//
-//             const xhr = new XMLHttpRequest();
-//             const url = new URL(location.href);
-//             url.pathname = '/cart/plus'
-//             const formData = new FormData();
-//             formData.append('itemQuantity', $quantity.textContent);
-//             formData.append('itemId', $itemId.value);
-//             xhr.onreadystatechange = () => {
-//                 if (xhr.readyState !== XMLHttpRequest.DONE) {
-//                     return;
-//                 }
-//                 if (xhr.status < 200 || xhr.status >= 300) {
-//                     alert(`오류 : ${xhr.status}`);
-//                     return;
-//                 }
-//                 const response = JSON.parse(xhr.responseText);
-//                 const currentResult = response['result']; // 현재 서버 응답 결과
-//                 // 결과가 두 번 연속 같은 경우 알림
-//                 if (currentResult === previousResult) {
-//                     repeatCount++;
-//                 } else {
-//                     repeatCount = 1; // 결과가 다르면 카운트 초기화
-//                 }
-//
-//                 if (repeatCount === 2) {
-//                     alert("제품의 최대 수량은 50개 입니다.");
-//                     repeatCount = 0; // 카운트 초기화
-//                 }
-//                 previousResult = currentResult; // 이전 결과 업데이트
-//
-//                 // 기존 로직: 화면 업데이트
-//                 $quantity.innerText = currentResult;
-//
-//
-//                 const basePrice = parseInt($itemPrice.getAttribute('data-price'), 10);
-//
-//                 const newPrice = basePrice * currentResult;
-//                 $itemPrice.innerText = `${newPrice.toLocaleString()} 원`;
-//
-//             };
-//
-//
-//             xhr.open('POST', url.toString());
-//             xhr.send(formData);
-//         });
-//
-//
-//         minusButton.addEventListener('click', (event) => {
-//
-//             // 현재 클릭한 버튼의 상위 .item 요소를 찾음
-//             const currentItem = event.currentTarget.closest('.item');
-//
-//             const $quantity = currentItem.querySelector('.quantity > .num');
-//             const $itemPrice = currentItem.querySelector('.itemPrice');
-//             const $itemId = currentItem.querySelector('.id');
-//
-//                 const xhr = new XMLHttpRequest();
-//                 const url = new URL(location.href);
-//                 url.pathname = '/cart/minus'
-//                 const formData = new FormData();
-//                 formData.append('itemQuantity', $quantity.textContent);
-//                 formData.append('itemId', $itemId.value);
-//                 xhr.onreadystatechange = () => {
-//                     if (xhr.readyState !== XMLHttpRequest.DONE) {
-//                       return;
-//                       }
-//                       if (xhr.status < 200 || xhr.status >= 300) {
-//
-//                       return;
-//                       }
-//                     const response = JSON.parse(xhr.responseText);
-//                     const currentResult = response['result']; // 현재 서버 응답 결과
-//                     // 결과가 두 번 연속 같은 경우 알림
-//                     if (currentResult === previousResult) {
-//                         repeatCount++;
-//                     } else {
-//                         repeatCount = 1; // 결과가 다르면 카운트 초기화
-//                     }
-//
-//                     if (repeatCount === 2) {
-//                         alert("수량은 최소 1개 이상 입니다.");
-//                         repeatCount = 0; // 카운트 초기화
-//                     }
-//                     previousResult = currentResult; // 이전 결과 업데이트
-//
-//                     // 기존 로직: 화면 업데이트
-//                     $quantity.innerText = currentResult;
-//
-//
-//                     const basePrice = parseInt($itemPrice.getAttribute('data-price'), 10);
-//
-//                     const newPrice = basePrice * currentResult;
-//                     $itemPrice.innerText = `${newPrice.toLocaleString()} 원`;
-//                 };
-//                 xhr.open('POST', url.toString());
-//                 xhr.send(formData);
-//
-//
-//         })
-//     })
-// }
 
 // 플러스와 마이너스 총괄 관리
 function updateQuantity(event, type) {

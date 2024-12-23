@@ -4,4 +4,15 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kms.teamproject.mappers.PayMapper">
 
+    <select id="selectAllCarts" resultType="com.kms.teamproject.entities.CartEntity">
+        SELECT `item_id`    AS `itemId`,
+               `item_name`  AS `itemName`,
+               `item_price` AS `itemPrice`,
+               `quantity`   AS `quantity`,
+               `is_checked` AS `isChecked`,
+               `is_deleted` AS `isDeleted`
+        FROM `kurly`.`cart`
+        WHERE `is_deleted` IS FALSE
+
+    </select>
 </mapper>

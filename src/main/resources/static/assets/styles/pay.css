@@ -508,6 +508,7 @@ button, select {
   background-color: white;
   color: #5f0080;
   border: 1px solid #5f0080;
+  transition: all 0.3s ease-in-out;
 }
 #shipping-container > .request-container > .request-text-container > .no-request > .button-cover > .input-button:hover {
   background-color: rgb(242.25, 242.25, 242.25);
@@ -516,6 +517,12 @@ button, select {
 #shipping-container > .request-container > .request-text-container > .no-request > .button-cover > .input-button:active {
   background-color: rgb(229.5, 229.5, 229.5);
   color: rgb(57.1484375, 0, 77);
+}
+#shipping-container > .request-container > .request-text-container > .no-request > .button-cover > .input-button.clicked {
+  width: 100%;
+  height: auto;
+  text-align: left;
+  border-radius: 5px;
 }
 #shipping-container > .request-container > .request-text-container > .no-request > .button-cover > .test {
   display: none;
@@ -527,7 +534,7 @@ button, select {
   border: 1px solid #5f0080;
   border-radius: 5px;
   padding: 1rem;
-  transition: all 0.3s ease-in-out;
+  margin-top: 10px;
 }
 #shipping-container > .request-container > .request-text-container > .no-request > .button-cover > .test > .delivery-request {
   padding: 0 1rem;
@@ -569,6 +576,15 @@ button, select {
 #shipping-container > .request-container > .request-text-container > .no-request > .button-cover > .test.visible {
   display: flex;
   margin-top: 10px;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 #final-pay {
@@ -766,7 +782,7 @@ button, select {
   justify-content: space-between;
   margin-top: 16px;
   padding: 16px 0 1px;
-  border-top: 1px solid rgb(244, 244, 244);
+  border-top: 1px solid #dfdfdf;
   font-size: 16px;
   color: rgb(76, 76, 76);
   flex-shrink: 0;

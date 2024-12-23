@@ -28,7 +28,8 @@
                             <ul class="line">
                                 <div>
                                     <div class="space"></div>
-                                    <li class="item">
+                                    <li class="item" th:each="item : ${items}">
+                                        <input class="id" name="itemId" th:value="${item.getItemId()}" style="display: none">
                                         <div class="image-container">
                                             <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0; margin: 0; padding: 0; position: absolute; inset: 0;">
                                                 <img alt="[KF365] 숯불 오리지널 쪽갈비 450g"
@@ -39,39 +40,39 @@
                                         </div>
                                         <div class="item-detail-container">
                                             <div class="item-name-container">
-                                                <p class="_text">[KF365] 숯불 오리지널 쪽갈비 450g</p>
-                                                <p class="-detail">[KF365] 숯불 오리지널 쪽갈비 450g(냉동)</p>
+                                                <p class="_text" th:text="${item.getItemName()}"></p>
+                                                <p class="-detail"></p>
                                             </div>
                                             <div class="item-price">
-                                                <p class="_text">"12,990"원</p>
-                                                <span class="_text-unDiscount">"14,500"원</span>
+                                                <p class="_text" th:text="|${#numbers.formatInteger(item.getItemPrice() * item.getQuantity(), 3, 'COMMA')} 원|"></p>
+                                                <span class="_text-unDiscount"></span>
                                                 <div class="line"></div>
-                                                <p class="quantity"> "1"개</p>
+                                                <p class="quantity" th:text="|${item.getQuantity()} 개|"></p>
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="item">
-                                        <div class="image-container">
-                                            <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0; margin: 0; padding: 0; position: absolute; inset: 0;">
-                                                <img alt="[KF365] 1+ 한우 등심 300g(냉장)"
-                                                     src="https://product-image.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/product/image/1cb01a58-bc19-4c8c-84ab-a79669d02927.jpg"
-                                                     decoding="async" data-nimg="fill" class="css-0"
-                                                     style="position: absolute; inset: 0; box-sizing: border-box; padding: 0; border: none; margin: auto; display: block; width: 0; height: 0; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
-                                            </span>
-                                        </div>
-                                        <div class="item-detail-container">
-                                            <div class="item-name-container">
-                                                <p class="_text">[KF365] 1+ 한우 등심 300g(냉장)</p>
+<!--                                    <li class="item">-->
+<!--                                        <div class="image-container">-->
+<!--                                            <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0; margin: 0; padding: 0; position: absolute; inset: 0;">-->
+<!--                                                <img alt="[KF365] 1+ 한우 등심 300g(냉장)"-->
+<!--                                                     src="https://product-image.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/product/image/1cb01a58-bc19-4c8c-84ab-a79669d02927.jpg"-->
+<!--                                                     decoding="async" data-nimg="fill" class="css-0"-->
+<!--                                                     style="position: absolute; inset: 0; box-sizing: border-box; padding: 0; border: none; margin: auto; display: block; width: 0; height: 0; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">-->
+<!--                                            </span>-->
+<!--                                        </div>-->
+<!--                                        <div class="item-detail-container">-->
+<!--                                            <div class="item-name-container">-->
+<!--                                                <p class="_text">[KF365] 1+ 한우 등심 300g(냉장)</p>-->
 
-                                            </div>
-                                            <div class="item-price">
-                                                <p class="_text">"33,500"원</p>
-                                                <span class="_text-unDiscount">"41,900"원</span>
-                                                <div class="line"></div>
-                                                <p class="quantity"> "1"개</p>
-                                            </div>
-                                        </div>
-                                    </li>
+<!--                                            </div>-->
+<!--                                            <div class="item-price">-->
+<!--                                                <p class="_text">"33,500"원</p>-->
+<!--                                                <span class="_text-unDiscount">"41,900"원</span>-->
+<!--                                                <div class="line"></div>-->
+<!--                                                <p class="quantity"> "1"개</p>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </li>-->
                                 </div>
                             </ul>
                         </ul>
@@ -206,7 +207,7 @@
                                         <div>
                                             <span class="total-price">
                                                 <span class="sign"></span>
-                                                "14,500"
+                                                "12,990"
                                             </span>
                                             <span class="won">원</span>
                                         </div>
@@ -218,26 +219,26 @@
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                       d="M1 5H0V10V11H1H6V10H1V5Z" fill="#ddd"></path>
                                             </svg>
-                                            <div class="discount --price-total-text">상품할인금액</div>
+                                            <div class="discount --price-total-text">배송비</div>
                                         </div>
                                         <div>
                                             <span class="total-price">
-                                                <span class="sign">-</span>
-                                                "1,510"
-                                            </span>
-                                            <span class="won">원</span>
-                                        </div>
-                                    </div>
-                                    <div class="delivery-price">
-                                        <div class="delivery-text">배송비</div>
-                                        <div>
-                                            <span class="delivery-price-text">
                                                 <span class="sign"></span>
-                                                "0"
+                                                0
                                             </span>
                                             <span class="won">원</span>
                                         </div>
                                     </div>
+<!--                                    <div class="delivery-price">-->
+<!--                                        <div class="delivery-text">배송비</div>-->
+<!--                                        <div>-->
+<!--                                            <span class="delivery-price-text">-->
+<!--                                                <span class="sign"></span>-->
+<!--                                                "0"-->
+<!--                                            </span>-->
+<!--                                            <span class="won">원</span>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <div class="final-total-price">
                                         <div class="final-price-text">최종결제금액</div>
                                         <div>

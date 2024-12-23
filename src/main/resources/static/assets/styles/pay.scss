@@ -447,6 +447,7 @@
           margin-top: 20px;
 
           > .input-button {
+
             display: block;
             padding: 0 10px;
             text-align: center;
@@ -459,6 +460,7 @@
             background-color: $background_color;
             color: $color;
             border: 1px solid #5F0080FF;
+            transition: all 0.3s ease-in-out;
 
             &:hover{
               background-color: darken($background_color, 5%);
@@ -467,6 +469,13 @@
             &:active{
               background-color: darken($background_color, 10%);
               color: darken($color, 10%);
+            }
+
+            &.clicked{
+              width: 100%;
+              height: auto;
+              text-align: left;
+              border-radius: 5px;
             }
           }
           >.test{
@@ -479,7 +488,8 @@
             border: 1px solid #5f0080;
             border-radius: 5px;
             padding: 1rem;
-            transition: all 0.3s ease-in-out;
+            margin-top: 10px;
+
 
             >.delivery-request {
               padding: 0 1rem;
@@ -526,9 +536,17 @@
           }
           >.test.visible{
             display: flex;
-
             margin-top: 10px;
+            animation: fadeIn 0.3s ease;
 
+          }
+          @keyframes fadeIn {
+            from{
+              opacity: 0;
+            }
+            to{
+              opacity: 1;
+            }
           }
 
         }
@@ -770,7 +788,7 @@
         justify-content: space-between;
         margin-top: 16px;
         padding: 16px 0 1px;
-        border-top: 1px solid rgb(244, 244, 244);
+        border-top: 1px solid #DFDFDFFF;
         font-size: 16px;
         color: rgb(76, 76, 76);
         flex-shrink: 0;

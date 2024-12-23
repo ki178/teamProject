@@ -74,8 +74,11 @@ public class CartController {
 
    @RequestMapping(value = "/updateCheck", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Void> updateCheck(@RequestParam(value = "itemId", required = false) int itemId,
-                                            @RequestParam(value = "isChecked", required = false) int isChecked) {
+    public ResponseEntity<Void> updateCheck(@RequestParam(value = "itemId", required = false) Integer itemId,
+                                            @RequestParam(value = "isChecked", required = false) Integer isChecked) {
+        if (itemId == null || isChecked == null) {
+            return ResponseEntity.badRequest().build();
+        }
         this.cartService.updateCheckStatus(itemId, isChecked);
         return ResponseEntity.ok().build();
    }
