@@ -7,8 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>cart-in</title>
     <link rel="shortcut icon" th:href="@{'/assets/images/kurly.ico'}">
-    <link type="text/css" rel="stylesheet" href="/assets/styles/cart-in.css">
-    <script defer type="text/javascript" src="/assets/scripts/cart-in.js"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{'/assets/styles/cart-in.css'}">
+    <script defer type="text/javascript" th:src="@{'/assets/scripts/cart-in.js'}"></script>
+    <script type="text/javascript" th:src="@{'/assets/scripts/common.js'}"></script>
 </head>
 <body>
 <div>
@@ -31,7 +32,7 @@
                                     <div class="input-all-cover --div"></div>
                                     <p class="_text">전체 선택</p>
                                 </label>
-                                <button class="unCheckbox" name="delete"><p class="_text">선택 삭제</p></button>
+                                <button class="unCheckbox" name="deleteAll"><p class="_text">선택 삭제</p></button>
                             </div>
                         </div>
                         <div id="list">
@@ -92,7 +93,7 @@
                                                     <p class="checkbox_text"></p>
                                                 </label>
                                             </div>
-                                            <button class="cancel-button">
+                                            <button class="cancel-button" name="delete" type="button">
                                                 <i class="cancel-icon" style="width: 20px; height: 20px">
                                                     <svg width="12.966666666" height="12.966666666" viewBox="0 0 16 16"
                                                          fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -262,6 +263,18 @@
         <div class="bottom"></div>
     </div>
 </div>
+<!--<div class="-&#45;&#45;dialog-cover">-->
+<!--    <div class="&#45;&#45;dialog">-->
+<!--        <div class="_title">-->
+<!--            <p class="_question">삭제하시겠습니까?</p>-->
+<!--            <div class="_button-container">-->
+<!--                <button aria-label="cancel-button" class="cancel _button">취소</button>-->
+<!--                <button aria-label="confirm-button" class="confirm _button">확인</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
 
 </body>
 </html>

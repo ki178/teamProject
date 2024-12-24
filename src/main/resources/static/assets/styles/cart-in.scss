@@ -187,7 +187,7 @@
 }
 
 #list {
- > #no-list {
+  > #no-list {
     display: flex;
     -webkit-box-pack: center;
     justify-content: center;
@@ -577,6 +577,7 @@
               }
 
               > .quantity {
+
                 margin-right: -50px;
                 display: flex;
                 -webkit-box-align: center;
@@ -913,6 +914,122 @@
         background-color: darken($background_color, 10%);
       }
 
+    }
+  }
+}
+
+.---dialog-cover {
+  > .--dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    z-index: 100000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    content: "";
+    background-color: rgba(0, 0, 0, .5);
+    animation-name: back;
+    animation-duration: .25s;
+
+    > ._title {
+      padding-top: 32px;
+      padding-bottom: 0;
+      width: 280px;
+      max-height: 480px;
+      position: relative;
+      z-index: 100001;
+      word-break: break-word;
+      border-radius: 16px;
+      background-color: #ffffff;
+      animation-name: dialog;
+      animation-duration: .2s;
+
+      > ._question {
+        color: #565e67;
+        white-space: pre-line;
+        padding-bottom: 20px;
+        padding-left: 24px;
+        padding-right: 24px;
+        overflow-y: auto;
+        max-height: 342px;
+        scrollbar-width: none;
+        line-height: 22px;
+        font-weight: 400;
+        font-size: 16px;
+      }
+
+      > ._button-container {
+        flex-direction: row;
+        display: flex;
+        padding: 8px 16px 16px 18px;
+
+        > .cancel {
+          margin-right: 8px;
+          width: 50%;
+          z-index: 1;
+          overflow: hidden;
+          transition: all .1s ease-out;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          border-width: 0;
+          box-sizing: border-box;
+          border-radius: 10px;
+          padding-right: 16px;
+          padding-left: 16px;
+          height: 48px;
+          background-color: #eceff3;
+          color: #222;
+          font-weight: 600;
+          font-size: 16px;
+
+        }
+
+        > .confirm {
+          width: 50%;
+          z-index: 1;
+          overflow: hidden;
+          transition: all .1s ease-out;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          border-width: 0;
+          box-sizing: border-box;
+          border-radius: 10px;
+          padding-right: 16px;
+          padding-left: 16px;
+          height: 48px;
+          background-color: #222;
+          color: #fff;
+          font-weight: 600;
+          font-size: 16px;
+        }
+      }
+    }
+
+    @keyframes dialog {
+      0% {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    @keyframes back {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
     }
   }
 }

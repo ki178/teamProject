@@ -87,4 +87,15 @@ public class CartService {
         return totalPrice;
     }
 
+
+    public void deleteItem(int itemId) {
+        CartEntity cartItem = this.cartMapper.selectCartById(itemId);
+        if (cartItem == null) {
+            throw new IllegalArgumentException("Invalid itemId: " + itemId);
+        }
+        cartItem.setDeleted(true); // isDeleted = 1로 설정
+        this.cartMapper.deleteCartItem(itemId);
+    }
+
+
 }

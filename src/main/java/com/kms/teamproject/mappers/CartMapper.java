@@ -22,5 +22,5 @@ public interface CartMapper {
 
     void updateCheckStatus(@Param("itemId") int itemId, @Param("isChecked") int isChecked);
 
-
+    void deleteCartItem(@Param("itemId") int itemId);
 }

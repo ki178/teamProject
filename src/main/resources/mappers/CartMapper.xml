@@ -49,11 +49,18 @@
         UPDATE `kurly`.`cart`
         SET `quantity` = #{quantity}
         WHERE `item_id` = #{itemId}
+
         LIMIT 1
     </update>
     <update id="updateCheckStatus" parameterType="map">
         UPDATE `kurly`.`cart`
         SET is_checked = #{isChecked}
         WHERE item_id = #{itemId}
+    </update>
+    <update id="deleteCartItem" parameterType="int">
+        UPDATE `kurly`.`cart`
+        SET `is_deleted` = 1
+        WHERE `item_id` = #{itemId}
+        LIMIT 1
     </update>
 </mapper>

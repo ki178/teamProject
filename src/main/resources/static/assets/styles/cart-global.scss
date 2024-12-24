@@ -108,7 +108,6 @@ button {
 }
 
 
-
 p {
   display: block;
   margin-block-start: 1em;
@@ -118,12 +117,13 @@ p {
   unicode-bidi: isolate;
 }
 
-a{
+a {
   background-color: transparent;
   text-decoration: none;
   color: inherit;
 }
-a:-webkit-any-link{
+
+a:-webkit-any-link {
   color: -webkit-link;
   cursor: pointer;
 }
@@ -154,3 +154,5 @@ svg:not(:root) {
 i {
   font-style: italic;
 }
+
+

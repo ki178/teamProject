@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -104,6 +104,17 @@ public class CartController {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid number format"));
         }
     }
+
+    @RequestMapping(value = "/deleteItem", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Void> deleteItem(@RequestParam(value = "itemId", required = true) Integer itemId) {
+        if (itemId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+       this.cartService.deleteItem(itemId);
+        return ResponseEntity.ok().build();
+    }
+
 
 
 
