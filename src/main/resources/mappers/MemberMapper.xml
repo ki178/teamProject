@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kms.teamproject.mappers.MemberMapper">
+
+    <select id="selectMemberById" resultType="com.kms.teamproject.entities.MemberEntity">
+        SELECT `id` AS `id`,
+               `password` AS `password`,
+               `user_name` AS `userName`,
+               `email` AS `email`,
+               `contact` AS `contact`,
+               `address` AS `address`,
+               `gender` AS `gender`,
+               `birth` AS `birth`,
+               `created_at` AS `createdAt`,
+               `updated_at` AS `updatedAt`,
+               `deleted_at` AS `deletedAt`,
+               `is_admin` AS `isAdmin`,
+               `is_suspended` AS `isSuspended`,
+               `is_verified` AS `isVerified`
+        FROM `kurly`.`members`
+        WHERE `id` = #{memberId}
+        AND `deleted_at` IS NULL
+        LIMIT 1
+    </select>
+</mapper>

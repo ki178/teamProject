@@ -2,6 +2,7 @@ package com.kms.teamproject.controllers;
 
 
 import com.kms.teamproject.entities.CartEntity;
+import com.kms.teamproject.entities.MemberEntity;
 import com.kms.teamproject.services.CartService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -26,18 +28,21 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @RequestMapping(value = "/empty", method = RequestMethod.GET)
-    public ModelAndView getCart() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("cart/cart");
-        return mav;
-    }
+
 
     @RequestMapping(value = "/in", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getCartIndex() {
         ModelAndView mav = new ModelAndView();
+        // 장바구니 아이템 조회
         List<CartEntity> items = this.cartService.getAllCarts();
+        boolean hasUncheckedItems = items.stream().anyMatch(item -> item.getIsChecked() == 0);
         mav.addObject("items", items);
+        mav.addObject("hasUncheckedItems", hasUncheckedItems);
+
+
+
+
+
         mav.setViewName("cart/cart-in");
         return mav;
     }
@@ -115,7 +120,23 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
+    @RequestMapping(value = "/deleteSelectedItems", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity<Void> deleteSelectedItems(@RequestParam("itemIds") List<Integer> itemIds) {
+        if (itemIds == null || itemIds.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        this.cartService.deleteSelectedItems(itemIds);
+        return ResponseEntity.ok().build();
+    }
 
+    @RequestMapping(value = "/getCheckboxStatus", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, Boolean>> getCheckboxStatus() {
+        List<CartEntity> items = cartService.getAllCarts();
+        boolean isAllChecked = items.stream().allMatch(item -> item.getIsChecked() == 1);
 
+        return ResponseEntity.ok(Map.of("isAllChecked", isAllChecked));
+    }
 
 }

@@ -1,7 +1,10 @@
 package com.kms.teamproject.services;
 
 import com.kms.teamproject.entities.CartEntity;
+import com.kms.teamproject.entities.MemberEntity;
+import com.kms.teamproject.entities.PayEntity;
 import com.kms.teamproject.mappers.CartMapper;
+import com.kms.teamproject.mappers.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +14,16 @@ import java.util.List;
 @Service
 public class CartService {
     private final CartMapper cartMapper;
+    private final MemberMapper memberMapper;
+
 
     @Autowired
-    public CartService(CartMapper cartMapper) {
+    public CartService(CartMapper cartMapper, MemberMapper memberMapper) {
         this.cartMapper = cartMapper;
+        this.memberMapper = memberMapper;
     }
+
+
 
     public List<CartEntity> getAllCarts() {
         return cartMapper.selectAllCarts();
@@ -95,6 +103,17 @@ public class CartService {
         }
         cartItem.setDeleted(true); // isDeleted = 1로 설정
         this.cartMapper.deleteCartItem(itemId);
+    }
+
+    public void deleteSelectedItems(List<Integer> itemIds) {
+        if (itemIds == null || itemIds.isEmpty()) {
+            throw new IllegalArgumentException("Item ID list is empty");
+        }
+        this.cartMapper.updateDeletedStatusForItems(itemIds);
+    }
+
+    public boolean payMove(PayEntity pay){
+        return false;
     }
 
 

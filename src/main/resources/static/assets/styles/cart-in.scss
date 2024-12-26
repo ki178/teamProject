@@ -141,7 +141,7 @@
               }
             }
 
-            > .unCheckbox {
+            > .delete-button {
               border-width: 1px;
               border-style: solid;
               z-index: 1;
@@ -187,6 +187,9 @@
 }
 
 #list {
+  &.no-items{
+    background-color: transparent;
+  }
   > #no-list {
     display: flex;
     -webkit-box-pack: center;
@@ -681,6 +684,7 @@
   margin-top: 160px;
 
 
+
   > .no-items-icon {
     align-items: center;
     justify-content: center;
@@ -1031,5 +1035,65 @@
         opacity: 1;
       }
     }
+  }
+}
+.input-cover.disabled {
+  background-image: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%20fill='none'%3e%3cpath%20d='M15.707%207.7071L8.68405%2014.7309L4.29272%2010.3389L5.70704%208.92483L8.68407%2011.9023L14.2927%206.29297L15.707%207.7071Z'%20fill='%23F2F5F8'/%3e%3c/svg%3e");
+  border-width: 2px;
+  border-style: solid;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border-radius: 4px;
+  border-color: #dfe4eb;
+}
+
+._text.disabled {
+  margin-left: 16px;
+  color: #a7b2bc;
+  line-height: 22px;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.checkbox[disabled] {
+  pointer-events: none;
+}
+.no-deleteButton{
+  color: #bcc4cc;
+  background-color: #fff;
+  cursor: default;
+  border-width: 1px;
+  border-style: solid;
+  z-index: 1;
+  overflow: hidden;
+  transition: all .1s ease-out;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding-right: 12px;
+  padding-left: 12px;
+  height: 32px;
+  border-color: #dfe4eb;
+  font-weight: 600;
+  font-size: 14px;
+
+  > ._no-text {
+    color: #bcc4cc;
+    line-height: 20px;
+    font-weight: 600;
+    font-size: 14px;
+
+    &:hover{
+      background: transparent;
+    }
+    &:active{
+      background: transparent;
+    }
+
   }
 }

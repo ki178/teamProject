@@ -26,17 +26,26 @@
                     <div class="cart-list-container">
                         <div class="cart-check-box">
                             <div class="cart-check">
-                                <label class="text-container --label">
+                                <!-- 아이템이 없을 경우 -->
+                                <label class="text-container" th:if="${items == null or #lists.isEmpty(items)}">
+                                    <input class="checkbox" name="selectAll" type="checkbox" disabled>
+                                    <div class="input-cover disabled"></div>
+                                    <p class="_text disabled">전체 선택</p>
+                                </label>
+                                <!-- 아이템이 있을 경우 -->
+                                <label class="text-container --label" th:if="${items != null and !#lists.isEmpty(items)}">
                                     <input class="checkbox" name="check" value="selectAll" onclick="selectAll(this)"
-                                           type="checkbox" checked>
+                                           type="checkbox">
                                     <div class="input-all-cover --div"></div>
                                     <p class="_text">전체 선택</p>
                                 </label>
-                                <button class="unCheckbox" name="deleteAll"><p class="_text">선택 삭제</p></button>
+                                <button class="delete-button" name="deleteAll" th:classappend="${items == null or #lists.isEmpty(items)} ? 'no-deleteButton' : ''">
+                                    <p class="_text _no-text">선택 삭제</p>
+                                </button>
                             </div>
                         </div>
-                        <div id="list">
-                            <div id="no_list" th:if="${items} == null">
+                        <div id="list" th:classappend="${items == null or #lists.isEmpty(items)} ? 'no-items' : ''">
+                            <div id="no_list" th:if="${items == null or #lists.isEmpty(items)}">
                                 <i class="no-items-icon" style="width: 64px; height: 64px;">
                                     <svg width="56" height="56" viewBox="0 0 21 22" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
@@ -48,19 +57,18 @@
                                 </i>
                                 <p class="_text">장바구니에 담긴 상품이 없습니다.</p>
                             </div>
-                            <!-- ::after→ -->
                             <span id="kurlyDelivery" class="kurlyDelivery"></span>
-                            <div class="list-delivery">
+                            <div class="list-delivery"  th:if="${items != null and !#lists.isEmpty(items)}">
                                 <div class="Delivery">
                                     <label class="delivery-label --label">
                                         <input name="check" value="selectAll" onclick="selectAll(this)"
-                                               class="Delivery-checkbox" type="checkbox" checked>
+                                               class="Delivery-checkbox" type="checkbox">
                                         <div class="input-cover --div"></div>
                                         <p class="_text">샛별배송</p>
                                     </label>
                                 </div>
                             </div>
-                            <div class="item-container" id="item-container">
+                            <div class="item-container" id="item-container" th:if="${items != null and !#lists.isEmpty(items)}">
                                 <div class="item" th:each="item:${items}">
                                     <input class="id" name="itemId" th:value="${item.getItemId()}" style="display: none">
                                     <div class="status-cover" th:if="${item.getStatus() == 1}">
@@ -197,11 +205,9 @@
                                     <p class="total-price"></p>
                                 </div>
                             </div>
-                            <!-- ←::after -->
                         </div>
                     </div>
                     <div id="pay">
-                        <!-- ::after→ -->
                         <div class="pay-container">
                             <div class="delivery-box">
                                 <div class="delivery">
@@ -241,7 +247,7 @@
                                 </div>
                                 <div class="pay">
                                     <p class="text">상품할인금액</p>
-                                    <p class="price color">- 0 원</p>
+                                    <p class="price color">0 원</p>
                                 </div>
                                 <div class="pay">
                                     <p class="text">배송비</p>
@@ -253,9 +259,8 @@
                                 </div>
                                 <p class="mileage">쿠폰/적립금은 주문서에서 사용 가능합니다.</p>
                             </div>
-                            <button class="pay-button" type="submit"></button>
+                            <button class="pay-button" type="submit" disabled></button>
                         </div>
-                        <!-- ←::after-->
                     </div>
                 </div>
             </div>
@@ -263,18 +268,5 @@
         <div class="bottom"></div>
     </div>
 </div>
-<!--<div class="-&#45;&#45;dialog-cover">-->
-<!--    <div class="&#45;&#45;dialog">-->
-<!--        <div class="_title">-->
-<!--            <p class="_question">삭제하시겠습니까?</p>-->
-<!--            <div class="_button-container">-->
-<!--                <button aria-label="cancel-button" class="cancel _button">취소</button>-->
-<!--                <button aria-label="confirm-button" class="confirm _button">확인</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
 </body>
 </html>
