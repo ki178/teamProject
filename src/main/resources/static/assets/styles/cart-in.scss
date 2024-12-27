@@ -160,8 +160,45 @@
               font-size: 14px;
               align-items: center;
               box-sizing: border-box;
-
               color: #222;
+
+              &.no-deleteButton{
+                color: #bcc4cc;
+                background-color: #fff;
+                cursor: default;
+                border-width: 1px;
+                border-style: solid;
+                z-index: 1;
+                overflow: hidden;
+                transition: all .1s ease-out;
+                display: flex;
+                align-items: center;
+                box-sizing: border-box;
+                border-radius: 6px;
+                padding-right: 12px;
+                padding-left: 12px;
+                height: 32px;
+                border-color: #dfe4eb;
+                font-weight: 600;
+                font-size: 14px;
+
+
+                > ._no-text {
+                  color: #bcc4cc;
+                  line-height: 20px;
+                  font-weight: 600;
+                  font-size: 14px;
+
+                  &:hover{
+                    background: transparent;
+                  }
+                  &:active{
+                    background: transparent;
+                  }
+
+                }
+              }
+
 
               &:hover {
                 background-color: darken($background_color, 5%);
@@ -917,7 +954,11 @@
       &:active {
         background-color: darken($background_color, 10%);
       }
-
+      &.disabled {
+        background-color: #f0e0ff;
+        color: #c6a9a9;
+        cursor: default;
+      }
     }
   }
 }
@@ -1061,39 +1102,4 @@
 
 .checkbox[disabled] {
   pointer-events: none;
-}
-.no-deleteButton{
-  color: #bcc4cc;
-  background-color: #fff;
-  cursor: default;
-  border-width: 1px;
-  border-style: solid;
-  z-index: 1;
-  overflow: hidden;
-  transition: all .1s ease-out;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  border-radius: 6px;
-  padding-right: 12px;
-  padding-left: 12px;
-  height: 32px;
-  border-color: #dfe4eb;
-  font-weight: 600;
-  font-size: 14px;
-
-  > ._no-text {
-    color: #bcc4cc;
-    line-height: 20px;
-    font-weight: 600;
-    font-size: 14px;
-
-    &:hover{
-      background: transparent;
-    }
-    &:active{
-      background: transparent;
-    }
-
-  }
 }

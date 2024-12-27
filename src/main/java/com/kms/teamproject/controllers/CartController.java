@@ -39,15 +39,11 @@ public class CartController {
         mav.addObject("items", items);
         mav.addObject("hasUncheckedItems", hasUncheckedItems);
 
-
-
-
-
         mav.setViewName("cart/cart-in");
         return mav;
     }
 
-
+    // 수량 증가 , 감소
     @RequestMapping(value = "/plus", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postCartPlus(@RequestParam(value = "itemQuantity", required = false) int quantity,
@@ -59,7 +55,6 @@ public class CartController {
         response.put("result", result);
         return response.toString();
     }
-
     @RequestMapping(value = "/minus", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postCartMinus(@RequestParam(value = "itemQuantity", required = false) int quantity,
@@ -80,63 +75,87 @@ public class CartController {
 
    @RequestMapping(value = "/updateCheck", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Void> updateCheck(@RequestParam(value = "itemId", required = false) Integer itemId,
+    public String updateCheck(@RequestParam(value = "itemId", required = false) Integer itemId,
                                             @RequestParam(value = "isChecked", required = false) Integer isChecked) {
+        JSONObject response = new JSONObject();
         if (itemId == null || isChecked == null) {
-            return ResponseEntity.badRequest().build();
+            return response.toString();
         }
         this.cartService.updateCheckStatus(itemId, isChecked);
-        return ResponseEntity.ok().build();
+        response.put("result", "success");
+        return response.toString();
    }
-
+    // 상품 전체 가격(체크된 항목만)
     @RequestMapping(value = "/totalPrice", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> calculateTotalPrice( @RequestParam(value = "itemId", required = false) List<Integer> itemIds,
+    public String calculateTotalPrice( @RequestParam(value = "itemId", required = false) List<Integer> itemIds,
                                                                      @RequestParam(value = "itemPrice", required = false) List<Integer> itemPrices) {
+        JSONObject response = new JSONObject();
         if (itemIds == null || itemPrices == null || itemIds.isEmpty() || itemPrices.isEmpty()) {
-            return ResponseEntity.ok(Map.of("totalPrice", 0));
+            response.put("totalPrice", 0);
+            return response.toString();
         }
 
         try {
-            List<Integer> itemIdNumbers = itemIds.stream().map(Integer::valueOf).toList();
-            List<Integer> itemPriceNumbers = itemPrices.stream().map(Integer::valueOf).toList();
-            if (itemIdNumbers.size() != itemPriceNumbers.size()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid input data"));
+
+            if (itemIds.size() != itemPrices.size()) {
+                response.put("error", "입력크기가 일치하지 않습니다");
+                return response.toString();
             }
             int totalPrice = this.cartService.calculateTotalPrice(itemIds, itemPrices);
-            return ResponseEntity.ok(Map.of("totalPrice", totalPrice));
+            response.put("totalPrice", totalPrice);
         }catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid number format"));
+            response.put("error","잘못된 숫자 형식입니다.");
         }
+        return response.toString();
     }
-
+    // 상품삭제
     @RequestMapping(value = "/deleteItem", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Void> deleteItem(@RequestParam(value = "itemId", required = true) Integer itemId) {
+    public String deleteItem(@RequestParam(value = "itemId", required = true) Integer itemId) {
+        JSONObject response = new JSONObject();
         if (itemId == null) {
-            return ResponseEntity.badRequest().build();
+            response.put("error", "잘못된 item ID 입니다");
+            return response.toString();
         }
        this.cartService.deleteItem(itemId);
-        return ResponseEntity.ok().build();
+        response.put("result", "success");
+        return response.toString();
     }
-
-    @RequestMapping(value = "/deleteSelectedItems", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // 상품 선택 삭제
+    @RequestMapping(value = "/deleteSelectedItems", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Void> deleteSelectedItems(@RequestParam("itemIds") List<Integer> itemIds) {
+    public String deleteSelectedItems(@RequestParam("itemIds") List<Integer> itemIds) {
+        JSONObject response = new JSONObject();
         if (itemIds == null || itemIds.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            response.put("error", "삭제할 항목이 선택되지 않았습니다");
+            return response.toString();
         }
         this.cartService.deleteSelectedItems(itemIds);
-        return ResponseEntity.ok().build();
+        response.put("result", "success");
+        return response.toString();
     }
 
+    // 전체 선택 체크박스와 샛별배송 체크박스 상황 분석
     @RequestMapping(value = "/getCheckboxStatus", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, Boolean>> getCheckboxStatus() {
-        List<CartEntity> items = cartService.getAllCarts();
+    public String getCheckboxStatus() {
+        JSONObject response = new JSONObject();
+        List<CartEntity> items = this.cartService.getAllCarts();
         boolean isAllChecked = items.stream().allMatch(item -> item.getIsChecked() == 1);
+        response.put("isAllChecked", isAllChecked);
+        return response.toString();
+    }
 
-        return ResponseEntity.ok(Map.of("isAllChecked", isAllChecked));
+    @RequestMapping(value = "/getCartStatus", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getCartStatus() {
+        JSONObject response = new JSONObject();
+        boolean hasItems = this.cartService.hasActiveItems();
+        boolean hasCheckedItems = this.cartService.hasCheckedItems();
+        response.put("hasItems", hasItems);
+        response.put("hasCheckedItems", hasCheckedItems);
+        return response.toString();
     }
 
 }

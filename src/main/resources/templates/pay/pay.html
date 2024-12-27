@@ -32,8 +32,8 @@
                                         <input class="id" name="itemId" th:value="${item.getItemId()}" style="display: none">
                                         <div class="image-container">
                                             <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0; margin: 0; padding: 0; position: absolute; inset: 0;">
-                                                <img alt="[KF365] 숯불 오리지널 쪽갈비 450g"
-                                                     src="https://product-image.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/product/image/1f8efd76-0f4e-4a1f-a49d-bd3992ca7f4e.jpg"
+                                                <img alt=""
+                                                     th:src="@{${item.getItemImage()}}"
                                                      decoding="async" data-nimg="fill" class="css-0"
                                                      style="position: absolute; inset: 0; box-sizing: border-box; padding: 0; border: none; margin: auto; display: block; width: 0; height: 0; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
                                             </span>
@@ -51,28 +51,6 @@
                                             </div>
                                         </div>
                                     </li>
-<!--                                    <li class="item">-->
-<!--                                        <div class="image-container">-->
-<!--                                            <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0; margin: 0; padding: 0; position: absolute; inset: 0;">-->
-<!--                                                <img alt="[KF365] 1+ 한우 등심 300g(냉장)"-->
-<!--                                                     src="https://product-image.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/product/image/1cb01a58-bc19-4c8c-84ab-a79669d02927.jpg"-->
-<!--                                                     decoding="async" data-nimg="fill" class="css-0"-->
-<!--                                                     style="position: absolute; inset: 0; box-sizing: border-box; padding: 0; border: none; margin: auto; display: block; width: 0; height: 0; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">-->
-<!--                                            </span>-->
-<!--                                        </div>-->
-<!--                                        <div class="item-detail-container">-->
-<!--                                            <div class="item-name-container">-->
-<!--                                                <p class="_text">[KF365] 1+ 한우 등심 300g(냉장)</p>-->
-
-<!--                                            </div>-->
-<!--                                            <div class="item-price">-->
-<!--                                                <p class="_text">"33,500"원</p>-->
-<!--                                                <span class="_text-unDiscount">"41,900"원</span>-->
-<!--                                                <div class="line"></div>-->
-<!--                                                <p class="quantity"> "1"개</p>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </li>-->
                                 </div>
                             </ul>
                         </ul>

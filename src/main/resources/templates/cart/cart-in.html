@@ -39,7 +39,7 @@
                                     <div class="input-all-cover --div"></div>
                                     <p class="_text">전체 선택</p>
                                 </label>
-                                <button class="delete-button" name="deleteAll" th:classappend="${items == null or #lists.isEmpty(items)} ? 'no-deleteButton' : ''">
+                                <button class="delete-button" name="deleteAll" th:classappend="${items == null or #lists.isEmpty(items) or hasUncheckedItems} ? 'no-deleteButton' : ''" disabled>
                                     <p class="_text _no-text">선택 삭제</p>
                                 </button>
                             </div>
@@ -155,7 +155,7 @@
                                                                     style="display: block; max-width: 100%; width: initial; height: initial; background: none; opacity: 1; border: 0; margin: 0; padding: 0;">
                                                            </span>
                                                            <img alt="" class="img"
-                                                                src="https://product-image.kurly.com/hdims/resize/%5E%3E120x%3E156/cropcenter/120x156/quality/85/src/product/image/a4e3660b-3804-45b4-8d24-11f777c3d8d9.jpg"
+                                                                th:src="@{${item.getItemImage()}}"
                                                                 decoding="async" data-nimg="intrinsic"
                                                                 style="position: absolute; inset: 0; box-sizing: border-box; padding: 0; border: none; margin: auto; display: block; width: 0; height: 0; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
                                                        </span>
@@ -259,7 +259,7 @@
                                 </div>
                                 <p class="mileage">쿠폰/적립금은 주문서에서 사용 가능합니다.</p>
                             </div>
-                            <button class="pay-button" type="submit" disabled></button>
+                            <button class="pay-button" type="submit" th:classappend="${items == null or #lists.isEmpty(items) or hasUncheckedItems} ? 'disabled' : ''" disabled></button>
                         </div>
                     </div>
                 </div>

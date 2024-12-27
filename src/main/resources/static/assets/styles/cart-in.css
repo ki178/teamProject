@@ -278,6 +278,38 @@ i {
   box-sizing: border-box;
   color: #222;
 }
+#main > .cart-main > .cart-container > .cart-list-container > .cart-check-box > .cart-check > .delete-button.no-deleteButton {
+  color: #bcc4cc;
+  background-color: #fff;
+  cursor: default;
+  border-width: 1px;
+  border-style: solid;
+  z-index: 1;
+  overflow: hidden;
+  transition: all 0.1s ease-out;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding-right: 12px;
+  padding-left: 12px;
+  height: 32px;
+  border-color: #dfe4eb;
+  font-weight: 600;
+  font-size: 14px;
+}
+#main > .cart-main > .cart-container > .cart-list-container > .cart-check-box > .cart-check > .delete-button.no-deleteButton > ._no-text {
+  color: #bcc4cc;
+  line-height: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+#main > .cart-main > .cart-container > .cart-list-container > .cart-check-box > .cart-check > .delete-button.no-deleteButton > ._no-text:hover {
+  background: transparent;
+}
+#main > .cart-main > .cart-container > .cart-list-container > .cart-check-box > .cart-check > .delete-button.no-deleteButton > ._no-text:active {
+  background: transparent;
+}
 #main > .cart-main > .cart-container > .cart-list-container > .cart-check-box > .cart-check > .delete-button:hover {
   background-color: rgb(242.25, 242.25, 242.25);
 }
@@ -892,6 +924,11 @@ i {
 #pay > .pay-container > .pay-button:active {
   background-color: rgb(73.3220338983, 22.7796610169, 103.2203389831);
 }
+#pay > .pay-container > .pay-button.disabled {
+  background-color: #f0e0ff;
+  color: #c6a9a9;
+  cursor: default;
+}
 
 .---dialog-cover > .--dialog {
   position: fixed;
@@ -1024,39 +1061,6 @@ i {
 
 .checkbox[disabled] {
   pointer-events: none;
-}
-
-.no-deleteButton {
-  color: #bcc4cc;
-  background-color: #fff;
-  cursor: default;
-  border-width: 1px;
-  border-style: solid;
-  z-index: 1;
-  overflow: hidden;
-  transition: all 0.1s ease-out;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  border-radius: 6px;
-  padding-right: 12px;
-  padding-left: 12px;
-  height: 32px;
-  border-color: #dfe4eb;
-  font-weight: 600;
-  font-size: 14px;
-}
-.no-deleteButton > ._no-text {
-  color: #bcc4cc;
-  line-height: 20px;
-  font-weight: 600;
-  font-size: 14px;
-}
-.no-deleteButton > ._no-text:hover {
-  background: transparent;
-}
-.no-deleteButton > ._no-text:active {
-  background: transparent;
 }
 
 /*# sourceMappingURL=cart-in.css.map */

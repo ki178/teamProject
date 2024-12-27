@@ -10,7 +10,8 @@
                `item_price` AS `itemPrice`,
                `quantity`   AS `quantity`,
                `is_checked` AS `isChecked`,
-               `is_deleted` AS `isDeleted`
+               `is_deleted` AS `isDeleted`,
+               `item_image` AS `itemImage`
         FROM `kurly`.`cart`
         WHERE `is_deleted` IS FALSE
         AND `is_checked` = 1

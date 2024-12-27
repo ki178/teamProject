@@ -1,8 +1,6 @@
 package com.kms.teamproject.services;
 
 import com.kms.teamproject.entities.CartEntity;
-import com.kms.teamproject.entities.MemberEntity;
-import com.kms.teamproject.entities.PayEntity;
 import com.kms.teamproject.mappers.CartMapper;
 import com.kms.teamproject.mappers.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,9 +110,11 @@ public class CartService {
         this.cartMapper.updateDeletedStatusForItems(itemIds);
     }
 
-    public boolean payMove(PayEntity pay){
-        return false;
+    public boolean hasActiveItems() {
+        return cartMapper.countActiveItems() > 0;
     }
 
-
+    public boolean hasCheckedItems() {
+        return cartMapper.countCheckedItems() > 0;
+    }
 }

@@ -6,8 +6,8 @@
 
     <insert id="insertCart"
     parameterType="com.kms.teamproject.entities.CartEntity">
-        INSERT INTO `kurly`.`cart`(`item_name`, `item_price`, `quantity`)
-        VALUES (#{itemName}, #{itemPrice}, #{quantity})
+        INSERT INTO `kurly`.`cart`(`item_name`, `item_price`, `quantity`, `item_image`)
+        VALUES (#{itemName}, #{itemPrice}, #{quantity}, #{itemImage})
     </insert>
 
     <select id="selectCartById"
@@ -39,7 +39,8 @@
                `quantity`   AS `quantity`,
                `is_checked` AS `isChecked`,
                `is_deleted` AS `isDeleted`,
-               `status`     AS `status`
+               `status`     AS `status`,
+               `item_image` AS `itemImage`
         FROM `kurly`.`cart`
         WHERE `is_deleted` IS FALSE
 
@@ -72,4 +73,15 @@
         </foreach>
         AND `is_checked` = 1
     </update>
+
+    <select id="countActiveItems" resultType="_int">
+        SELECT COUNT(*)
+        FROM `kurly`.`cart`
+        WHERE `is_deleted` = 0
+    </select>
+    <select id="countCheckedItems" resultType="_int">
+        SELECT COUNT(*)
+        FROM `kurly`.`cart`
+        WHERE `is_deleted` = 0 AND `is_checked` = 1
+    </select>
 </mapper>

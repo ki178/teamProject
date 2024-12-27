@@ -2,7 +2,7 @@ const $main = document.getElementById('main');
 const $list = document.getElementById('list');
 const $itemContainer = document.getElementById('item-container');
 const $pay = document.getElementById('pay');
-const $payButton = document.querySelector('.pay-button');
+
 
 // 이벤트 리스너 추가
 document.querySelectorAll('.plus').forEach(button => {
@@ -15,7 +15,8 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', calculateTotal);
 });
 
-{
+
+
     // 전체선택 기능 구현
     function selectAll(selectAll) {
         const $checkboxes = document.getElementsByName('check');
@@ -25,7 +26,6 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
         });
         calculateTotal();
     }
-
 
     // 개별 checkbox 클릭 이벤트 추가
     document.addEventListener('DOMContentLoaded', () => {
@@ -95,10 +95,15 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
                           
                           return;
                           }
+                        const response = JSON.parse(xhr.responseText);
+                        if (response['error']) {
+                            alert(`Error: ${response['error']}`);
+                            return;
+                        }
                         location.reload();
                         calculateTotal(); // 총합 재계산
                     };
-                    xhr.open('POST', '/cart/deleteSelectedItems');
+                    xhr.open('DELETE', '/cart/deleteSelectedItems');
                     xhr.send(formData);
                 },
                 onCancel: () => {
@@ -108,7 +113,7 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
         });
     });
 
-// 개별 checkbox 상태 변경 시 호출
+    // 개별 checkbox 상태 변경 시 호출
     function sendCheckboxStatus(checkbox) {
         const currentItem = checkbox.closest('.item');
         if (!currentItem) {
@@ -133,11 +138,19 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
 
                 return;
             }
+            const response = JSON.parse(xhr.responseText);
+            if (response['error']) {
+                alert(`Error: ${response['error']}`);
+            }
+
         };
         xhr.open('POST', '/cart/updateCheck');
         xhr.send(formData);
     }
 
+
+
+    // 전체선택 서버 구현
     document.addEventListener('DOMContentLoaded', () => {
         const allSelectCheckbox = document.querySelector('input[value="selectAll"]'); // 전체 선택
         const deliveryCheckbox = document.querySelector('.Delivery-checkbox'); // 샛별 배송
@@ -150,11 +163,27 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
             allSelectCheckbox.checked = !isAnyUnchecked;
             deliveryCheckbox.checked = !isAnyUnchecked;
         }
+        // 샛별배송 체크박스 클릭 시 동작
+        deliveryCheckbox.addEventListener('change', () => {
+            const isChecked = deliveryCheckbox.checked;
+
+            // 모든 체크박스 상태를 샛별배송 체크박스와 동기화
+            itemCheckboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+                sendCheckboxStatus(checkbox); // 서버로 상태 전송
+            });
+
+            // 전체 선택 체크박스 동기화
+            allSelectCheckbox.checked = isChecked;
+            calculateTotal(); // 총합 재계산
+        });
+
         // 개별 체크박스 변경 시 호출
         itemCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 sendCheckboxStatus(checkbox); // 서버로 상태 동기화
                 syncCheckboxes(); // 전체 선택 및 샛별 배송 상태 동기화
+                calculateTotal(); // 총합 재계산
             });
         });
 
@@ -175,6 +204,12 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
                 // 초기 상태 설정
                 allSelectCheckbox.checked = isAllChecked;
                 deliveryCheckbox.checked = isAllChecked;
+
+                itemCheckboxes.forEach(checkbox => {
+                    checkbox.checked = isAllChecked;
+                });
+
+                calculateTotal(); // 초기 총합 계산
             };
             xhr.open('GET', '/cart/getCheckboxStatus');
             xhr.send();
@@ -186,6 +221,7 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
     function calculateTotal() {
         const formData = new FormData();
         let totalItemPrice = 0;
+
         document.querySelectorAll('.item').forEach(item => {
             const checkbox = item.querySelector('.checkbox');
             if (!checkbox) {
@@ -195,23 +231,16 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
             if (checkbox && checkbox.checked) {
                 const $itemIdElement = item.querySelector('.id');
                 const $itemPriceElement = item.querySelector('.itemPrice');
-                if (!$itemIdElement || !$itemPriceElement) {
-                    return;
+                if ($itemIdElement || $itemPriceElement) {
+                    const $itemId = $itemIdElement.value.trim();
+                    const $itemPrice = parseInt($itemPriceElement.innerText.replace(/[^0-9]/g, ''), 10);
+                    console.log()
+                    formData.append('itemId', $itemId);
+                    formData.append('itemPrice', $itemPrice.toString());
+                    totalItemPrice += $itemPrice;
                 }
-                const $itemId = $itemIdElement.value.trim();
-                const $itemPrice = parseInt($itemPriceElement.innerText.replace(/[^0-9]/g, ''), 10);
-                console.log()
-                if (!$itemId || isNaN($itemPrice)) {
-
-                    return;
-                }
-                formData.append('itemId', $itemId);
-                formData.append('itemPrice', $itemPrice.toString());
-                totalItemPrice += $itemPrice;
-
             }
         });
-
 
         const xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
@@ -224,8 +253,14 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
             }
 
             const response = JSON.parse(xhr.responseText);
+            if (response['error']) {
+                alert(`Error: ${response['error']}`);
+                return;
+            }
             const totalPrice = response['totalPrice'] || 0;
+
             updateUI(totalPrice);
+
 
             function updateUI(totalPrice) {
                 const priceText = `${totalPrice.toLocaleString()} 원`;
@@ -252,19 +287,99 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
         xhr.send(formData);
     }
 
-// 초기화 및 이벤트 등록
     document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.checkbox').forEach(checkbox => {
+        const $payButton = document.querySelector('.pay-button');
+        const $deleteButton = document.querySelector('.delete-button');
+
+        function updatePayButtonState() {
+            const $hasItems = document.querySelectorAll('.item').length > 0;
+            const $hasCheckedItems = Array.from(document.querySelectorAll('.checkbox')).some(checkbox => checkbox.checked);
+
+            // 버튼 상태 즉시 업데이트
+            if ($hasCheckedItems && $hasItems) {
+                $deleteButton.classList.remove('no-deleteButton');
+                $payButton.classList.remove('disabled');
+                $deleteButton.disabled = false;
+                $payButton.disabled = false;
+            } else {
+                $deleteButton.classList.add('no-deleteButton');
+                $payButton.classList.add('disabled');
+                $deleteButton.disabled = true;
+                $payButton.disabled = true;
+            }
+
+
+            // 서버에 상태 요청 (비동기)
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) {
+                    return;
+                }
+                if (xhr.status < 200 || xhr.status >= 300) {
+
+                    return;
+                }
+                const response = JSON.parse(xhr.responseText);
+                const hasItems = response['hasItems'];
+                const hasCheckedItems = response['hasCheckedItems'];
+
+                // 선택 삭제 버튼 상태, 결제 버튼 상태
+                if (hasCheckedItems && hasItems) {
+                    $deleteButton.classList.remove('no-deleteButton');
+                    $payButton.classList.remove('disabled');
+                    $deleteButton.disabled = false;
+                    $payButton.disabled = false;
+                } else {
+                    $deleteButton.classList.add('no-deleteButton');
+                    $payButton.classList.add('disabled');
+                    $deleteButton.disabled = true;
+                    $payButton.disabled = true;
+                }
+
+
+            };
+            xhr.open('GET', '/cart/getCartStatus');
+            xhr.send()
+        }
+
+        function onCheckboxChange() {
+            sendCheckboxStatus(this); // 체크박스 상태 서버 전송
+            updatePayButtonState();   // 버튼 상태 업데이트
+            calculateTotal();         // 총합 계산
+        }
+
+        // 초기 상태 업데이트
+        function initializeCart(){
+            calculateTotal();
+            updatePayButtonState()
+        }
+        // 체크박스 및 삭제 버튼에 이벤트 리스너 등록
+        document.querySelectorAll('.checkbox').forEach((checkbox) => {
+            checkbox.removeEventListener('change', onCheckboxChange);
+            checkbox.addEventListener('change', onCheckboxChange);
             checkbox.addEventListener('change', () => {
                 sendCheckboxStatus(checkbox);
-                calculateTotal();
+                initializeCart();
             });
         });
+        updatePayButtonState(); // 버튼 상태 초기화
+        calculateTotal();       // 총합 초기화
+        document.querySelectorAll('.cancel-button').forEach((button) => {
+            button.addEventListener('click', initializeCart);
+        });
 
-
-        calculateTotal(); // 페이지 로드 시 총합 계산
+        // 버튼 클릭 이벤트
+        $payButton.addEventListener('click', () => {
+            if (!$payButton.disabled) {
+                window.location.href = '/pay/';
+            }
+        });
+        //초기화 호출
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCart();
+        });
     });
-}
+
 // 플러스와 마이너스 총괄 관리
 {
     function updateQuantity(event, type) {
@@ -287,6 +402,10 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
                 return;
             }
             const response = JSON.parse(xhr.responseText);
+            if (response['error']) {
+                alert(`Error: ${response['error']}`);
+                return;
+            }
             const updatedQuantity = response['result'];
             const basePrice = parseInt(itemPriceElement.getAttribute('data-price'), 10);
             const updatedPrice = basePrice * updatedQuantity;
@@ -321,26 +440,37 @@ document.addEventListener('DOMContentLoaded', calculateTotal);
                 // 다이얼로그 표시
                 Dialog.showDialog({
                     onConfirm: () => {
+                        button.disabled = true; // 중복 요청 방지
                         // DELETE 요청 전송
                         const xhr = new XMLHttpRequest();
                         xhr.onreadystatechange = () => {
-                            if (xhr.readyState === XMLHttpRequest.DONE) {
-                                if (xhr.status >= 200 && xhr.status < 300) {
-                                    // UI에서 항목 제거
-                                    currentItem.remove();
+                            if (xhr.readyState !== XMLHttpRequest.DONE) {
 
-                                    // 남은 아이템 확인
-                                    const items = document.querySelectorAll('.item');
-                                    if (items.length === 0) {
-                                        location.reload();
-                                    }else {
-                                        calculateTotal(); // 총합 재계산
-                                    }
-                                } else {
-                                    console.error('Failed to delete item:', xhr.responseText);
-                                }
+                                return;
                             }
+                            if (xhr.status < 200 || xhr.status >= 300) {
+
+                                return;
+                            }
+                            button.disabled = false;
+                            const response = JSON.parse(xhr.responseText);
+                            if (response['error']) {
+                                alert(`Error: ${response.error}`);
+                                return;
+                            }
+                            // UI에서 항목 제거
+                            currentItem.remove();
+
+                            // 남은 아이템 확인
+                            const items = document.querySelectorAll('.item');
+                            if (items.length === 0) {
+                                location.reload();
+                            } else {
+                                calculateTotal(); // 총합 재계산
+                            }
+
                         };
+
                         xhr.open('DELETE', `/cart/deleteItem?itemId=${itemId}`);
                         xhr.send();
                     },
@@ -351,14 +481,4 @@ document.addEventListener('DOMContentLoaded', calculateTotal);
             });
         });
     });
-}
-
-
-// 결제페이지 이동 및 기능구현
-{
-    $payButton.onclick = () => {
-
-    }
-
-
 }

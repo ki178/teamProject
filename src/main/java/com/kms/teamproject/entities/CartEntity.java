@@ -11,6 +11,7 @@ public class CartEntity {
  private int itemId;
  private String itemName;
  private int itemPrice;
+ private String itemImage;
  private int quantity;
  private int isChecked;
  private boolean isDeleted;

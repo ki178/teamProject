@@ -25,4 +25,9 @@ public interface CartMapper {
     void deleteCartItem(@Param("itemId") int itemId);
 
     void updateDeletedStatusForItems(@Param("itemIds") List<Integer> itemIds);
+
+
+    int countActiveItems();
+
+    int countCheckedItems();
 }
