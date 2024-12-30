@@ -109,4 +109,8 @@ button, input[type=button], input[type=reset], input[type=submit]{
 button, select{
   text-transform: none;
 }
-
+a{
+  background-color: transparent;
+  text-decoration: none;
+  color: inherit;
+}

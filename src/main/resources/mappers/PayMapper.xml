@@ -3,6 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kms.teamproject.mappers.PayMapper">
+    <insert id="insertItemLoad" parameterType="com.kms.teamproject.entities.PayLoadEntity">
+    INSERT INTO `kurly`.`pay_load`
+        (`pay_item_id`, `pay_item_name`, `pay_item_price`, `pay_quantity`, `item-status`, `item_image`, `total_price`)
+    VALUES (#{payItemId}, #{payItemName}, #{payItemPrice}, #{payQuantity}, #{itemStatus}, #{itemImage}, #{totalPrice})
+    </insert>
 
     <select id="selectAllCarts" resultType="com.kms.teamproject.entities.CartEntity">
         SELECT `item_id`    AS `itemId`,

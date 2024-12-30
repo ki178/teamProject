@@ -1,6 +1,7 @@
 package com.kms.teamproject.services;
 
 import com.kms.teamproject.entities.CartEntity;
+import com.kms.teamproject.entities.PayLoadEntity;
 import com.kms.teamproject.mappers.PayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,4 +20,11 @@ public class PayService {
         return payMapper.selectAllCarts();
     }
 
+    public void saveAllItemsToLoad(List<PayLoadEntity> items) {
+        if (items != null && !items.isEmpty()) {
+            for (PayLoadEntity item : items) {
+                payMapper.insertItemLoad(item);
+            }
+        }
+    }
 }

@@ -16,3 +16,51 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const $payButton = document.querySelector('.pay-button');
+
+    $payButton.addEventListener('click', () => {
+        const items = document.querySelectorAll('.item');
+        if (!items.length){
+            alert("결제할 상품이 없습니다.");
+            return;
+        }
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+
+        items.forEach((item, index) => {
+           const itemId = item.querySelector('.id')?.value;
+           const itemName = item.querySelector('.item-name-container > ._text')?.textContent;
+           const itemPrice = item.querySelector('.item-price > ._text')?.textContent.replace(/[^0-9]/g, '');
+           const itemQuantity = item.querySelector('.quantity')?.textContent.replace(/[^0-9]/g, '');
+           const itemImage = item.querySelector('img')?.src;
+
+           if (itemId && itemName && itemPrice && itemQuantity) {
+               formData.append(`items[${index}][itemId]`, itemId);
+               formData.append(`items[${index}][itemName]`, itemName);
+               formData.append(`items[${index}][itemPrice]`, itemPrice);
+               formData.append(`items[${index}][itemQuantity]`, itemQuantity);
+               formData.append(`items[${index}][itemImage]`, itemImage);
+           }
+        });
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE) {
+              return;
+              }
+              if (xhr.status < 200 || xhr.status >= 300) {
+                  alert('결제 처리 중 문제가 발생했습니다.')
+              return;
+              }
+            // 서버 응답에 따라 리다이렉트 또는 추가 동작
+            const response = JSON.parse(xhr.responseText);
+            if (response.status === 'success') {
+                alert(response.message);
+                window.location.href = '/record/';
+            } else {
+                alert('결제가 실패했습니다.');
+            }
+        };
+        xhr.open('POST', '/pay/submit', true);
+        xhr.send(formData)
+    });
+});
