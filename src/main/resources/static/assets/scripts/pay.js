@@ -16,7 +16,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
+    const updateTotalPrice =() => {
+        const items = document.querySelectorAll('.item');
+        let totalPrice = 0;
+
+        items.forEach(item => {
+           const itemPrice = parseInt(item.querySelector('.item-price >  ._text')?.textContent.replace(/[^0-9]/g, ''), 10);
+            const itemQuantity = parseInt(item.querySelector('.quantity')?.textContent.replace(/[^0-9]/g, ''), 10);
+            if (!isNaN(itemPrice) && !isNaN(itemQuantity)){
+                totalPrice += itemPrice;
+            }
+        });
+
+        const totalPriceElements = document.querySelectorAll('.pay-total-price, .total, .pay-price, .item-total-price');
+        totalPriceElements.forEach(element => {
+            element.textContent = `${totalPrice.toLocaleString()}`
+        });
+
+        const payButton = document.querySelector('.pay-button > .pay-price');
+        if (payButton){
+            payButton.textContent = `${totalPrice.toLocaleString()}원 결제하기`
+        }
+    };
+
+    updateTotalPrice();
+
+
     const $payButton = document.querySelector('.pay-button');
 
     $payButton.addEventListener('click', () => {
@@ -26,23 +54,29 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const xhr = new XMLHttpRequest();
-        const formData = new FormData();
+
+        const payload = {items: [], totalPrice: 0}
 
         items.forEach((item, index) => {
-           const itemId = item.querySelector('.id')?.value;
+            const itemPrice = parseInt(item.querySelector('.item-price > ._text')?.textContent.replace(/[^0-9]/g, ''), 10);
+            const itemQuantity = parseInt(item.querySelector('.quantity')?.textContent.replace(/[^0-9]/g, ''), 10);
+            const itemId = item.querySelector('.id')?.value;
            const itemName = item.querySelector('.item-name-container > ._text')?.textContent;
-           const itemPrice = item.querySelector('.item-price > ._text')?.textContent.replace(/[^0-9]/g, '');
-           const itemQuantity = item.querySelector('.quantity')?.textContent.replace(/[^0-9]/g, '');
            const itemImage = item.querySelector('img')?.src;
 
+
            if (itemId && itemName && itemPrice && itemQuantity) {
-               formData.append(`items[${index}][itemId]`, itemId);
-               formData.append(`items[${index}][itemName]`, itemName);
-               formData.append(`items[${index}][itemPrice]`, itemPrice);
-               formData.append(`items[${index}][itemQuantity]`, itemQuantity);
-               formData.append(`items[${index}][itemImage]`, itemImage);
+               payload.items.push({
+                   itemId,
+                   itemName,
+                   itemPrice,
+                   itemQuantity,
+                   itemImage
+               });
+               payload.totalPrice += itemPrice;
            }
         });
+
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== XMLHttpRequest.DONE) {
               return;
@@ -55,12 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = JSON.parse(xhr.responseText);
             if (response.status === 'success') {
                 alert(response.message);
-                window.location.href = '/record/';
+                // window.location.href = './record';
             } else {
-                alert('결제가 실패했습니다.');
+                alert(response.message);
             }
+
         };
         xhr.open('POST', '/pay/submit', true);
-        xhr.send(formData)
+        xhr.send(JSON.stringify(payload))
     });
 });

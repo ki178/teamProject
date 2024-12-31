@@ -13,9 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Controller
@@ -45,21 +45,37 @@ public class PayController {
 
     }
 
-    @RequestMapping(value = "/submit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String submitPayment(@RequestBody List<PayLoadEntity> items){
-        if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("결제할 항목이 제공되지 않습니다.");
-        }
+    @RequestMapping(value = "/submit", method = RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public String submitPayment(@RequestBody JSONObject payload) {
+        System.out.println(payload);
+        int totalPrice = payload.getInt("totalPrice");
+        List<PayLoadEntity> items = new ArrayList<>();
+        payload.getJSONArray("items").forEach(item -> {
+            JSONObject jsonItem = (JSONObject) item;
+            PayLoadEntity entity = new PayLoadEntity();
+            entity.setPayItemId(jsonItem.getInt("itemId"));
+            entity.setPayItemName(jsonItem.getString("itemName"));
+            entity.setPayItemPrice(String.valueOf(jsonItem.getInt("itemPrice")));
+            entity.setPayQuantity(String.valueOf(jsonItem.getInt("itemQuantity")));
+            entity.setItemImage(jsonItem.getString("itemImage"));
+            items.add(entity);
+        });
 
-        // 데이터 저장
+        // 디버깅 출력
+        System.out.println("생성된 items 리스트: " + items);
+
+        // 리스트가 비어 있는 경우 처리
+        if (items.isEmpty()) {
+            throw new IllegalArgumentException("결제 항목이 없습니다.");
+        }
+        this.payService.validateTotalPrice(items, totalPrice);
         this.payService.saveAllItemsToLoad(items);
 
-        // 응답 데이터 생성
         JSONObject response = new JSONObject();
         response.put("status", "success");
         response.put("message", "결제가 성공적으로 처리되었습니다.");
         response.put("itemsProcessed", items.size());
-
         return response.toString();
     }
 

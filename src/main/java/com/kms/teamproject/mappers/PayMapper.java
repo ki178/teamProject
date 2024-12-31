@@ -9,7 +9,10 @@ import java.util.List;
 @Mapper
 public interface PayMapper {
 
+    List<CartEntity> selectAllCarts();
+
     void insertItemLoad(PayLoadEntity payLoadEntity);
 
-    List<CartEntity> selectAllCarts();
+    CartEntity selectCartById(int itemId);
+
 }

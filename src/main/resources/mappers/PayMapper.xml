@@ -5,8 +5,8 @@
 <mapper namespace="com.kms.teamproject.mappers.PayMapper">
     <insert id="insertItemLoad" parameterType="com.kms.teamproject.entities.PayLoadEntity">
     INSERT INTO `kurly`.`pay_load`
-        (`pay_item_id`, `pay_item_name`, `pay_item_price`, `pay_quantity`, `item-status`, `item_image`, `total_price`)
-    VALUES (#{payItemId}, #{payItemName}, #{payItemPrice}, #{payQuantity}, #{itemStatus}, #{itemImage}, #{totalPrice})
+        (`pay_item_name`, `pay_item_price`, `pay_quantity`, `item_status`, `item_image`, `total_price`)
+    VALUES (#{payItemName}, #{payItemPrice}, #{payQuantity}, #{itemStatus}, #{itemImage}, #{totalPrice})
     </insert>
 
     <select id="selectAllCarts" resultType="com.kms.teamproject.entities.CartEntity">
@@ -20,5 +20,13 @@
         FROM `kurly`.`cart`
         WHERE `is_deleted` IS FALSE
         AND `is_checked` = 1
+    </select>
+    <select id="selectCartById" resultType="com.kms.teamproject.entities.CartEntity">
+        SELECT item_id AS itemId,
+               item_name AS itemName,
+               item_price AS itemPrice,
+               quantity AS quantity
+        FROM kurly.cart
+        WHERE item_id = #{itemId}
     </select>
 </mapper>
