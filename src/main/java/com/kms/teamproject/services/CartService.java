@@ -23,6 +23,9 @@ public class CartService {
 
 
 
+    public List<CartEntity> getAllCarts() {
+        return cartMapper.selectAllCarts();
+    }
 
 
     public int plus(CartEntity cart, int quantity, int itemId) throws IllegalArgumentException {
@@ -107,9 +110,7 @@ public class CartService {
         this.cartMapper.updateDeletedStatusForItems(itemIds);
     }
 
-    public List<CartEntity> getAllCarts() {
-        return cartMapper.selectAllCarts();
-    }
+
 
 
     public boolean hasActiveItems() {

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"payItemId"})
+@EqualsAndHashCode(of = {"index"})
 public class PayLoadEntity {
+    private int index;
+    private String payRecordId;
     private int payItemId;
     private String payItemName;
     private String payItemPrice;

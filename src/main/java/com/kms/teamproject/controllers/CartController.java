@@ -147,7 +147,7 @@ public class CartController {
         return response.toString();
     }
 
-    //
+    // 장바구니에서 결제주문서로 넘어가기 위한 메서드(item이  있는지, 체크된 item이 있는지)
     @RequestMapping(value = "/getCartStatus", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getCartStatus() {

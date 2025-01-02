@@ -56,20 +56,20 @@
     <update id="updateCheckStatus" parameterType="map">
         UPDATE `kurly`.`cart`
         SET is_checked = #{isChecked}
-        WHERE item_id = #{itemId}
+        WHERE `index` = #{index}
     </update>
     <update id="deleteCartItem" parameterType="int">
         UPDATE `kurly`.`cart`
         SET `is_deleted` = 1
-        WHERE `item_id` = #{itemId}
+        WHERE `index` = #{index}
         LIMIT 1
     </update>
     <update id="updateDeletedStatusForItems" parameterType="list">
         UPDATE `kurly`.`cart`
         SET `is_deleted` = 1
-        WHERE `item_id` IN
-        <foreach item="itemId" collection="itemIds" open="(" separator="," close=")">
-            #{itemId}
+        WHERE `index` IN
+        <foreach item="index" collection="itemIds" open="(" separator="," close=")">
+            #{index}
         </foreach>
         AND `is_checked` = 1
     </update>

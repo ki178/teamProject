@@ -6,8 +6,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"itemId"})
+@EqualsAndHashCode(of = {"index"})
 public class CartEntity {
+ private int index; // 추가한 것
+ private String memberId; // 추가한 것
+ private String cartId; // 추가한 것
  private int itemId;
  private String itemName;
  private int itemPrice;

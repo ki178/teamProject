@@ -70,6 +70,7 @@
                             </div>
                             <div class="item-container" id="item-container" th:if="${items != null and !#lists.isEmpty(items)}">
                                 <div class="item" th:each="item:${items}">
+                                    <input class="index" name="index" th:value="${item.index}" style="display: none">
                                     <input class="id" name="itemId" th:value="${item.getItemId()}" style="display: none">
                                     <div class="status-cover" th:if="${item.getStatus() == 1}">
                                         <i class="status-icon" style="width: 20px; height: 20px">

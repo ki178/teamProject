@@ -45,37 +45,43 @@ public class PayController {
 
     }
 
+    @RequestMapping(value = "/noRecord", method = RequestMethod.GET)
+    public ModelAndView getNoRecord() {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("pay/no-pay-record");
+        return mav;
+    }
+
     @RequestMapping(value = "/submit", method = RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public String submitPayment(@RequestBody JSONObject payload) {
-        System.out.println(payload);
-        int totalPrice = payload.getInt("totalPrice");
-        List<PayLoadEntity> items = new ArrayList<>();
-        payload.getJSONArray("items").forEach(item -> {
-            JSONObject jsonItem = (JSONObject) item;
-            PayLoadEntity entity = new PayLoadEntity();
-            entity.setPayItemId(jsonItem.getInt("itemId"));
-            entity.setPayItemName(jsonItem.getString("itemName"));
-            entity.setPayItemPrice(String.valueOf(jsonItem.getInt("itemPrice")));
-            entity.setPayQuantity(String.valueOf(jsonItem.getInt("itemQuantity")));
-            entity.setItemImage(jsonItem.getString("itemImage"));
-            items.add(entity);
-        });
+    public String submitPayment(@RequestParam Map<String, String> formData) {
+        // 데이터 파싱
+        List<PayLoadEntity> payLoad = new ArrayList<>();
+        int totalPrice = Integer.parseInt(formData.get("totalPrice"));
 
-        // 디버깅 출력
-        System.out.println("생성된 items 리스트: " + items);
-
-        // 리스트가 비어 있는 경우 처리
-        if (items.isEmpty()) {
-            throw new IllegalArgumentException("결제 항목이 없습니다.");
+        // items 파싱
+        int index = 0;
+        while (formData.containsKey(String.format("items[%d].payItemId", index))) {
+            PayLoadEntity item = new PayLoadEntity();
+            item.setPayItemId(Integer.parseInt(formData.get(String.format("items[%d].payItemId", index))));
+            item.setPayItemName(formData.get(String.format("items[%d].payItemName", index)));
+            item.setPayItemPrice(formData.get(String.format("items[%d].payItemPrice", index)));
+            item.setPayQuantity(formData.get(String.format("items[%d].payQuantity", index)));
+            item.setItemImage(formData.get(String.format("items[%d].itemImage", index)));
+            payLoad.add(item);
+            index++;
         }
-        this.payService.validateTotalPrice(items, totalPrice);
-        this.payService.saveAllItemsToLoad(items);
+
+        boolean isValid = this.payService.processPayment(payLoad, totalPrice);
 
         JSONObject response = new JSONObject();
-        response.put("status", "success");
-        response.put("message", "결제가 성공적으로 처리되었습니다.");
-        response.put("itemsProcessed", items.size());
+        if (!isValid) {
+            response.put("status", "fail");
+            response.put("message", "결제에 실패했습니다.");
+        } else {
+            response.put("status", "success");
+            response.put("message", "결제가 완료되었습니다.");
+        }
         return response.toString();
     }
 

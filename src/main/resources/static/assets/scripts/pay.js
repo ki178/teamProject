@@ -53,30 +53,31 @@ document.addEventListener('DOMContentLoaded', () => {
             alert("결제할 상품이 없습니다.");
             return;
         }
-        const xhr = new XMLHttpRequest();
 
-        const payload = {items: [], totalPrice: 0}
-
+        const formData = new FormData();
         items.forEach((item, index) => {
-            const itemPrice = parseInt(item.querySelector('.item-price > ._text')?.textContent.replace(/[^0-9]/g, ''), 10);
-            const itemQuantity = parseInt(item.querySelector('.quantity')?.textContent.replace(/[^0-9]/g, ''), 10);
-            const itemId = item.querySelector('.id')?.value;
-           const itemName = item.querySelector('.item-name-container > ._text')?.textContent;
-           const itemImage = item.querySelector('img')?.src;
+            const idElement = item.querySelector('.id')?.value;
+            const itemNameElement = item.querySelector('.item-name-container > ._text')?.textContent;
+            const itemPriceElement = item.querySelector('.item-price > ._text')?.textContent.replace(/[^0-9]/g, '');
+            const itemQuantityElement = item.querySelector('.quantity')?.textContent.replace(/[^0-9]/g, '');
+            const itemImageElement = item.querySelector('.image-container img')?.src;
+            // `?`의 의미 `querySelector`로 요소를 찾지 못했을 경우 `null`을 반환하기 때문에 해당 접근 시 오류가 발생할 수 있음. 이를 방지 하기 위해 요소 선택 후 `null` 체크를 하기 위한 로직
+            if (!idElement || !itemNameElement || !itemPriceElement || !itemQuantityElement || !itemImageElement) {
+                console.error(`Item ${index} is missing required fields.`);
+                return;
+            }
 
 
-           if (itemId && itemName && itemPrice && itemQuantity) {
-               payload.items.push({
-                   itemId,
-                   itemName,
-                   itemPrice,
-                   itemQuantity,
-                   itemImage
-               });
-               payload.totalPrice += itemPrice;
-           }
+            formData.append(`items[${index}].payItemId`, idElement);
+            formData.append(`items[${index}].payItemName`, itemNameElement);
+            formData.append(`items[${index}].payItemPrice`, itemPriceElement);
+            formData.append(`items[${index}].payQuantity`, itemQuantityElement);
+            formData.append(`items[${index}].itemImage`, itemImageElement);
         });
+        const totalPrice = document.querySelector('.pay-total-price').textContent.replace(/[^0-9]/g, '');
+        formData.append('totalPrice', totalPrice);
 
+        const xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== XMLHttpRequest.DONE) {
               return;
@@ -89,13 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = JSON.parse(xhr.responseText);
             if (response.status === 'success') {
                 alert(response.message);
-                // window.location.href = './record';
+                window.location.href = './record';
             } else {
                 alert(response.message);
             }
 
         };
         xhr.open('POST', '/pay/submit', true);
-        xhr.send(JSON.stringify(payload))
+        xhr.send(formData);
     });
 });
