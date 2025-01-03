@@ -47,10 +47,10 @@ public class CartController {
     @RequestMapping(value = "/plus", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postCartPlus(@RequestParam(value = "itemQuantity", required = false) int quantity,
-                               @RequestParam(value = "itemId", required = false) int itemId,
+                               @RequestParam(value = "index", required = false) int index,
                                CartEntity cart) throws IllegalArgumentException {
         JSONObject response = new JSONObject();
-        int result = this.cartService.plus(cart, quantity, itemId);
+        int result = this.cartService.plus(cart, quantity, index);
 
         response.put("result", result);
         return response.toString();
@@ -58,11 +58,11 @@ public class CartController {
     @RequestMapping(value = "/minus", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postCartMinus(@RequestParam(value = "itemQuantity", required = false) int quantity,
-                               @RequestParam(value = "itemId", required = false) int itemId) throws IllegalArgumentException {
+                               @RequestParam(value = "index", required = false) int index) throws IllegalArgumentException {
         JSONObject response = new JSONObject();
 
         try {
-            int result = this.cartService.minus(quantity, itemId);
+            int result = this.cartService.minus(quantity, index);
             response.put("result", result);
 
         } catch (IllegalArgumentException e) {
@@ -75,34 +75,34 @@ public class CartController {
 
    @RequestMapping(value = "/updateCheck", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String updateCheck(@RequestParam(value = "itemId", required = false) Integer itemId,
+    public String updateCheck(@RequestParam(value = "index", required = false) Integer index,
                                             @RequestParam(value = "isChecked", required = false) Integer isChecked) {
         JSONObject response = new JSONObject();
-        if (itemId == null || isChecked == null) {
+        if (index == null || isChecked == null) {
             return response.toString();
         }
-        this.cartService.updateCheckStatus(itemId, isChecked);
+        this.cartService.updateCheckStatus(index, isChecked);
         response.put("result", "success");
         return response.toString();
    }
     // 상품 전체 가격(체크된 항목만)
     @RequestMapping(value = "/totalPrice", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String calculateTotalPrice( @RequestParam(value = "itemId", required = false) List<Integer> itemIds,
+    public String calculateTotalPrice( @RequestParam(value = "index", required = false) List<Integer> index,
                                                                      @RequestParam(value = "itemPrice", required = false) List<Integer> itemPrices) {
         JSONObject response = new JSONObject();
-        if (itemIds == null || itemPrices == null || itemIds.isEmpty() || itemPrices.isEmpty()) {
+        if (index == null || itemPrices == null || index.isEmpty() || itemPrices.isEmpty()) {
             response.put("totalPrice", 0);
             return response.toString();
         }
 
         try {
 
-            if (itemIds.size() != itemPrices.size()) {
+            if (index.size() != itemPrices.size()) {
                 response.put("error", "입력크기가 일치하지 않습니다");
                 return response.toString();
             }
-            int totalPrice = this.cartService.calculateTotalPrice(itemIds, itemPrices);
+            int totalPrice = this.cartService.calculateTotalPrice(index, itemPrices);
             response.put("totalPrice", totalPrice);
         }catch (NumberFormatException e) {
             response.put("error","잘못된 숫자 형식입니다.");
@@ -112,26 +112,26 @@ public class CartController {
     // 상품삭제
     @RequestMapping(value = "/deleteItem", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String deleteItem(@RequestParam(value = "itemId", required = true) Integer itemId) {
+    public String deleteItem(@RequestParam(value = "index", required = true) Integer index) {
         JSONObject response = new JSONObject();
-        if (itemId == null) {
-            response.put("error", "잘못된 item ID 입니다");
+        if (index == null) {
+            response.put("error", "잘못된 index 입니다");
             return response.toString();
         }
-       this.cartService.deleteItem(itemId);
+       this.cartService.deleteItem(index);
         response.put("result", "success");
         return response.toString();
     }
     // 상품 선택 삭제
     @RequestMapping(value = "/deleteSelectedItems", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String deleteSelectedItems(@RequestParam("itemIds") List<Integer> itemIds) {
+    public String deleteSelectedItems(@RequestParam("indices") List<Integer> indices) {
         JSONObject response = new JSONObject();
-        if (itemIds == null || itemIds.isEmpty()) {
+        if (indices == null || indices.isEmpty()) {
             response.put("error", "삭제할 항목이 선택되지 않았습니다");
             return response.toString();
         }
-        this.cartService.deleteSelectedItems(itemIds);
+        this.cartService.deleteSelectedItems(indices);
         response.put("result", "success");
         return response.toString();
     }

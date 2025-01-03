@@ -15,4 +15,6 @@ public interface PayMapper {
 
     CartEntity selectCartById(int itemId);
 
+    Integer getPayIndexByCartIndex(int cartIndex);
+
 }

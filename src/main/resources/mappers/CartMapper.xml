@@ -6,24 +6,26 @@
 
     <insert id="insertCart"
     parameterType="com.kms.teamproject.entities.CartEntity">
-        INSERT INTO `kurly`.`cart`(`item_name`, `item_price`, `quantity`, `item_image`)
-        VALUES (#{itemName}, #{itemPrice}, #{quantity}, #{itemImage})
+        INSERT INTO `kurly`.`cart`(`item_id`,`item_name`, `item_price`, `quantity`, `item_image`)
+        VALUES (#{itemId},#{itemName}, #{itemPrice}, #{quantity}, #{itemImage})
     </insert>
 
-    <select id="selectCartById"
+    <select id="selectCartByIndex"
             resultType="com.kms.teamproject.entities.CartEntity">
-        SELECT `item_id`    AS `itemId`,
+        SELECT `index` AS `index`,
+               `item_id`    AS `itemId`,
                `item_name`  AS `itemName`,
                `item_price` AS `itemPrice`,
                `quantity`   AS `quantity`
         FROM `kurly`.`cart`
-        WHERE `item_id` = #{itemId}
+        WHERE `index` = #{index}
         LIMIT 1
     </select>
 
     <select id="selectCartByPrice"
             resultType="com.kms.teamproject.entities.CartEntity">
-        SELECT `item_id`    AS `itemId`,
+        SELECT `index` AS `index`,
+               `item_id`    AS `itemId`,
                `item_name`  AS `itemName`,
                `item_price` AS `itemPrice`,
                `quantity`   AS `quantity`
@@ -33,7 +35,8 @@
     </select>
     <select id="selectAllCarts"
             resultType="com.kms.teamproject.entities.CartEntity">
-        SELECT `item_id`    AS `itemId`,
+        SELECT `index` AS `index`,
+               `item_id`    AS `itemId`,
                `item_name`  AS `itemName`,
                `item_price` AS `itemPrice`,
                `quantity`   AS `quantity`,
@@ -49,7 +52,7 @@
     <update id="updateCart" parameterType="_int">
         UPDATE `kurly`.`cart`
         SET `quantity` = #{quantity}
-        WHERE `item_id` = #{itemId}
+        WHERE `index` = #{index}
 
         LIMIT 1
     </update>
@@ -68,7 +71,7 @@
         UPDATE `kurly`.`cart`
         SET `is_deleted` = 1
         WHERE `index` IN
-        <foreach item="index" collection="itemIds" open="(" separator="," close=")">
+        <foreach item="index" collection="indices" open="(" separator="," close=")">
             #{index}
         </foreach>
         AND `is_checked` = 1

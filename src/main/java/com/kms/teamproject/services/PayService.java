@@ -37,6 +37,14 @@ public class PayService {
                 return false;
             }
             totalPriceSum += cartItem.getItemPrice() * cartItem.getQuantity();
+
+
+            Integer payIndex = this.payMapper.getPayIndexByCartIndex(cartItem.getIndex());
+            if (payIndex == null) {
+                throw new IllegalStateException("해당 cartIndex에 연결된 payIndex가 없습니다: " + cartItem.getIndex());
+            }
+
+            item.setPayIndex(payIndex);
         }
 
         if (totalPriceSum == totalPrice) {

@@ -28,7 +28,7 @@ public class CartService {
     }
 
 
-    public int plus(CartEntity cart, int quantity, int itemId) throws IllegalArgumentException {
+    public int plus(CartEntity cart, int quantity, int index) throws IllegalArgumentException {
         final int Max_Quantity = 50;
         if (quantity < 1 || cart.getQuantity() >= Max_Quantity) {
             return cart.getQuantity();
@@ -36,9 +36,9 @@ public class CartService {
 
 
 
-        CartEntity cartItem = this.cartMapper.selectCartById(itemId);
+        CartEntity cartItem = this.cartMapper.selectCartByIndex(index);
         if (cartItem == null) {
-            throw new IllegalArgumentException("Invalid itemId: " + itemId);
+            throw new IllegalArgumentException("Invalid index: " + index);
         }
 
         int newQuantity = cartItem.getQuantity() + 1;
@@ -52,12 +52,12 @@ public class CartService {
         return newQuantity;
     }
 
-    public int minus(int quantity, int itemId)throws IllegalArgumentException  {
+    public int minus(int quantity, int index)throws IllegalArgumentException  {
         final int Min_Quantity = 1;
 
-        CartEntity cartItem = this.cartMapper.selectCartById(itemId);
+        CartEntity cartItem = this.cartMapper.selectCartByIndex(index);
         if (cartItem == null) {
-            throw new IllegalArgumentException("Invalid itemId: " + itemId);
+            throw new IllegalArgumentException("Invalid index: " + index);
         }
 
         if (quantity < 1 || cartItem.getQuantity() <= Min_Quantity) {
@@ -77,37 +77,40 @@ public class CartService {
 
 
 
-   public void updateCheckStatus(int itemId, int isChecked){
-        this.cartMapper.updateCheckStatus(itemId,isChecked);
+   public void updateCheckStatus(int index, int isChecked){
+       if (index <= 0) {
+           throw new IllegalArgumentException("Invalid index: " + index); // index 유효성 검사
+       }
+        this.cartMapper.updateCheckStatus(index,isChecked);
    }
 
-    public int calculateTotalPrice(List<Integer> itemIds, List<Integer> itemPrices) {
-        if (itemIds == null || itemPrices == null || itemIds.size() != itemPrices.size()) {
+    public int calculateTotalPrice(List<Integer> indices, List<Integer> itemPrices) {
+        if (indices == null || itemPrices == null || indices.size() != itemPrices.size()) {
             throw new IllegalArgumentException("Invalid input data: itemIds or itemPrices is null or mismatched");
         }
 
         int totalPrice = 0;
-        for (int i = 0; i < itemIds.size(); i++) {
+        for (int i = 0; i < indices.size(); i++) {
             totalPrice += itemPrices.get(i); // itemPrice 합산
         }
         return totalPrice;
     }
 
 
-    public void deleteItem(int itemId) {
-        CartEntity cartItem = this.cartMapper.selectCartById(itemId);
-        if (cartItem == null) {
-            throw new IllegalArgumentException("Invalid itemId: " + itemId);
+    public void deleteItem(int index) {
+        CartEntity cartItem = this.cartMapper.selectCartByIndex(index);
+        if (index <= 0) {
+            throw new IllegalArgumentException("Invalid index: " + index);
         }
         cartItem.setDeleted(true); // isDeleted = 1로 설정
-        this.cartMapper.deleteCartItem(itemId);
+        this.cartMapper.deleteCartItem(index);
     }
 
-    public void deleteSelectedItems(List<Integer> itemIds) {
-        if (itemIds == null || itemIds.isEmpty()) {
-            throw new IllegalArgumentException("Item ID list is empty");
+    public void deleteSelectedItems(List<Integer> indices) {
+        if (indices == null || indices.isEmpty()) {
+            throw new IllegalArgumentException("Index list is empty");
         }
-        this.cartMapper.updateDeletedStatusForItems(itemIds);
+        this.cartMapper.updateDeletedStatusForItems(indices);
     }
 
 

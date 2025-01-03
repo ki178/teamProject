@@ -72,10 +72,10 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
                         if (!currentItem) return;
 
                         const isChecked = checkbox.checked; // 체크 여부
-                        const itemIdElement = currentItem.querySelector('.id');
+                        const itemIndexElement = currentItem.querySelector('.id');
 
-                        if (isChecked && itemIdElement) {
-                            $selectedItems.push(itemIdElement.value);
+                        if (isChecked && itemIndexElement) {
+                            $selectedItems.push(itemIndexElement.value);
                         }
                     });
                     if ($selectedItems.length === 0) {
@@ -86,7 +86,7 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
                     const xhr = new XMLHttpRequest();
                     // FormData 생성
                     const formData = new FormData();
-                    $selectedItems.forEach(itemId => formData.append('itemIds', itemId));
+                    $selectedItems.forEach(index => formData.append('indices', index));
                     xhr.onreadystatechange = () => {
                         if (xhr.readyState !== XMLHttpRequest.DONE) {
                           return;
@@ -119,16 +119,16 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
         if (!currentItem) {
             return;
         }
-        const itemIdElement = currentItem.querySelector('.id');
-        if (!itemIdElement) {
+        const indexElement = currentItem.querySelector('.id');
+        if (!indexElement) {
             return;
         }
-        const itemId = itemIdElement.value.trim();
+        const index = indexElement.value ? indexElement.value.trim() : null;
         const isChecked = checkbox.checked ? 1 : 0;
 
         const xhr = new XMLHttpRequest();
         const formData = new FormData();
-        formData.append('itemId', itemId);
+        formData.append('index', index);
         formData.append('isChecked', isChecked);
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -229,13 +229,13 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
                 return;
             }
             if (checkbox && checkbox.checked) {
-                const $itemIdElement = item.querySelector('.id');
+                const $indexElement  = item.querySelector('.id');
                 const $itemPriceElement = item.querySelector('.itemPrice');
-                if ($itemIdElement || $itemPriceElement) {
-                    const $itemId = $itemIdElement.value.trim();
+                if ($indexElement  || $itemPriceElement) {
+                    const $index = $indexElement .value.trim();
                     const $itemPrice = parseInt($itemPriceElement.innerText.replace(/[^0-9]/g, ''), 10);
                     console.log()
-                    formData.append('itemId', $itemId);
+                    formData.append('index', $index);
                     formData.append('itemPrice', $itemPrice.toString());
                     totalItemPrice += $itemPrice;
                 }
@@ -359,6 +359,7 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', onCheckboxChange);
             checkbox.addEventListener('change', () => {
                 sendCheckboxStatus(checkbox);
+                updatePayButtonState();
                 initializeCart();
             });
         });
@@ -384,13 +385,13 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
 {
     function updateQuantity(event, type) {
         const currentItem = event.currentTarget.closest('.item');
-        const itemId = currentItem.querySelector('.id').value;
+        const index = currentItem.querySelector('.id').value;
         const quantityElement = currentItem.querySelector('.quantity > .num');
         const itemPriceElement = currentItem.querySelector('.itemPrice');
 
         const xhr = new XMLHttpRequest();
         const formData = new FormData();
-        formData.append('itemId', itemId);
+        formData.append('index', index);
         formData.append('itemQuantity', quantityElement.innerText);
 
         xhr.onreadystatechange = () => {
@@ -430,9 +431,9 @@ document.addEventListener('DOMContentLoaded', calculateTotal);
         document.querySelectorAll('.cancel-button').forEach(button => {
             button.addEventListener('click', (event) => {
                 const currentItem = event.currentTarget.closest('.item');
-                const itemId = currentItem.querySelector('.id').value;
+                const index = currentItem.querySelector('.id').value;
 
-                if (!itemId) {
+                if (!index) {
                     console.error('Item ID를 찾을 수 없습니다.');
                     return;
                 }
@@ -471,7 +472,7 @@ document.addEventListener('DOMContentLoaded', calculateTotal);
 
                         };
 
-                        xhr.open('DELETE', `/cart/deleteItem?itemId=${itemId}`);
+                        xhr.open('DELETE', `/cart/deleteItem?index=${index}`);
                         xhr.send();
                     },
                     onCancel: () => {

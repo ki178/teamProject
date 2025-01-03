@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @EqualsAndHashCode(of = {"index"})
 public class PayLoadEntity {
     private int index;
-    private String payRecordId;
+    private int payIndex;
     private int payItemId;
     private String payItemName;
     private String payItemPrice;
     private String payQuantity;
-    private int itemStatus;
     private String itemImage;
     private int totalPrice;
 }

@@ -14,17 +14,17 @@ public interface CartMapper {
 
     List<CartEntity> selectAllCarts();
 
-    CartEntity selectCartById(@Param("itemId") int itemId);
+    CartEntity selectCartByIndex(@Param("index") int index);
 
     CartEntity selectCartByPrice(@Param("cartPrice")int cartPrice);
 
     int updateCart(CartEntity quantity);
 
-    void updateCheckStatus(@Param("itemId") int itemId, @Param("isChecked") int isChecked);
+    void updateCheckStatus(@Param("index") int index, @Param("isChecked") int isChecked);
 
-    void deleteCartItem(@Param("itemId") int itemId);
+    void deleteCartItem(@Param("index") int index);
 
-    void updateDeletedStatusForItems(@Param("itemIds") List<Integer> itemIds);
+    void updateDeletedStatusForItems(@Param("indices") List<Integer> indices);
 
 
     int countActiveItems();
