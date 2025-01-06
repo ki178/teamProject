@@ -24,6 +24,8 @@ public class PayService {
         return this.payMapper.selectAllCarts();
     }
 
+
+
     // 전달받은 값을 db에 저장, 하기 전에 검사 진행
     public boolean processPayment(List<PayLoadEntity> payload, int totalPrice) {
         int totalPriceSum = 0;
@@ -39,12 +41,15 @@ public class PayService {
             totalPriceSum += cartItem.getItemPrice() * cartItem.getQuantity();
 
 
-            Integer payIndex = this.payMapper.getPayIndexByCartIndex(cartItem.getIndex());
-            if (payIndex == null) {
-                throw new IllegalStateException("해당 cartIndex에 연결된 payIndex가 없습니다: " + cartItem.getIndex());
+
+            List<Integer> payIndexes = this.payMapper.getPayIndexByCartIndex(item.getPayItemId());
+            if (payIndexes == null || payIndexes.isEmpty()) {
+                throw new IllegalStateException("해당 cartIndex에 연결된 payIndex가 없습니다: " + item.getPayItemId());
             }
 
-            item.setPayIndex(payIndex);
+            for (Integer payIndex : payIndexes) {
+                item.setPayIndex(payIndex);
+            }
         }
 
         if (totalPriceSum == totalPrice) {
@@ -52,9 +57,15 @@ public class PayService {
                 item.setTotalPrice(totalPrice);
                 this.payMapper.insertItemLoad(item);
             }
-            return false;
+            return true;
         }
-        return true;
+        return false;
+    }
+
+
+
+    public List<PayLoadEntity> getAllPayByCartId(){
+        return this.payMapper.selectAllPayLoads();
     }
 
 

@@ -21,8 +21,10 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
     function selectAll(selectAll) {
         const $checkboxes = document.getElementsByName('check');
         $checkboxes.forEach((checkbox) => {
-            checkbox.checked = selectAll.checked;
-            sendCheckboxStatus(checkbox);
+            if (checkbox !== selectAll) {
+                checkbox.checked = selectAll.checked;
+                sendCheckboxStatus(checkbox);
+            }
         });
         calculateTotal();
     }
@@ -53,9 +55,15 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
                 }
             }
 
-            checkbox.addEventListener('change', () => {
-                sendCheckboxStatus(checkbox); // 클릭한 checkbox의 상태를 서버로 전송
-                calculateTotal(); // 상태 변경 후 총합 재계산
+            checkbox.addEventListener('change', function () {
+                const allCheckboxes = document.querySelectorAll('.checkbox');
+                const isAllChecked = Array.from(allCheckboxes).every(cb => cb.checked);
+
+                const selectAllCheckbox = document.querySelector('input[value="selectAll"]');
+                selectAllCheckbox.checked = isAllChecked;
+
+                sendCheckboxStatus(this);
+                calculateTotal();
             });
         });
         calculateTotal(); // 초기 총합 계산
@@ -171,6 +179,8 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
             itemCheckboxes.forEach(checkbox => {
                 checkbox.checked = isChecked;
                 sendCheckboxStatus(checkbox); // 서버로 상태 전송
+                updatePayButtonState();
+
             });
 
             // 전체 선택 체크박스 동기화
@@ -199,15 +209,15 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
                   return;
                   }
                 const response = JSON.parse(xhr.responseText);
-                const isAllChecked = response['isAllChecked'];
 
-                // 초기 상태 설정
-                allSelectCheckbox.checked = isAllChecked;
-                deliveryCheckbox.checked = isAllChecked;
-
-                itemCheckboxes.forEach(checkbox => {
-                    checkbox.checked = isAllChecked;
+                document.querySelectorAll('.checkbox').forEach((checkbox, index) => {
+                    checkbox.checked = response['checkedItems'][index] === 1;
                 });
+
+
+                const $selectAllCheckbox = document.querySelector('input[value="selectAll"]');
+                const $allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                $selectAllCheckbox.checked = $allChecked;
 
                 calculateTotal(); // 초기 총합 계산
             };
@@ -287,7 +297,6 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
         xhr.send(formData);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
         const $payButton = document.querySelector('.pay-button');
         const $deleteButton = document.querySelector('.delete-button');
 
@@ -379,7 +388,7 @@ document.querySelectorAll('.checkbox').forEach(checkbox => {
         document.addEventListener('DOMContentLoaded', () => {
             initializeCart();
         });
-    });
+
 
 // 플러스와 마이너스 총괄 관리
 {

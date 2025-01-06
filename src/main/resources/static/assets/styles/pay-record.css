@@ -175,7 +175,7 @@ a {
   height: 80px;
 }
 #pay-record > .pay-record-box > .load-container > .item-record-container > .item-container {
-  display: flex;
+  display: grid;
   -webkit-box-align: center;
   align-items: center;
   flex-direction: column;
@@ -187,7 +187,7 @@ a {
   margin-top: 16px;
   margin-bottom: 16px;
   border-radius: 16px;
-  padding: 0;
+  padding: 16px 16px 20px;
 }
 #pay-record > .pay-record-box > .load-container > .item-record-container > .item-container > .item {
   margin-top: 16px;
@@ -266,7 +266,7 @@ a {
   min-width: 1px;
   min-height: 10px;
   margin: 0 6px;
-  background-color: #eceff3;
+  background-color: #c1c4c8;
 }
 #pay-record > .pay-record-box > .load-container > .item-record-container > .item-container > .item > .item-box > .item-detail > .item-price-container > .item-quantity {
   color: #565e67;

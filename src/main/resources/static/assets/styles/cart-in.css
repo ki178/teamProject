@@ -924,7 +924,7 @@ i {
 }
 #pay > .pay-container > .pay-button.disabled {
   background-color: #f0e0ff;
-  color: #c6a9a9;
+  color: #c19edf;
   cursor: default;
 }
 

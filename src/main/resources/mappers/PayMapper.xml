@@ -23,11 +23,27 @@
         WHERE `is_deleted` IS FALSE
         AND `is_checked` = 1
     </select>
+
+    <select id="selectAllPayLoads" resultType="com.kms.teamproject.entities.PayLoadEntity">
+    SELECT `index` AS `index`,
+           `pay_index` AS `payIndex`,
+           `pay_item_id` AS `payItemId`,
+           `pay_item_name` AS `payItemName`,
+           `pay_item_price` AS `payItemPrice`,
+           `pay_quantity` AS `payQuantity`,
+           `item_image` AS `itemImage`,
+           `total_price` AS `totalPrice`
+    FROM `kurly`.`pay_record`
+    WHERE 1
+    </select>
+
+
     <select id="selectCartById" resultType="com.kms.teamproject.entities.CartEntity">
-        SELECT item_id AS itemId,
-               item_name AS itemName,
-               item_price AS itemPrice,
-               quantity AS quantity
+        SELECT `index` AS `index`,
+                `item_id` AS `itemId`,
+               `item_name` AS `itemName`,
+               `item_price` AS `itemPrice`,
+               `quantity` AS `quantity`
         FROM kurly.cart
         WHERE item_id = #{itemId}
     </select>
@@ -35,10 +51,9 @@
     <select id="getPayIndexByCartIndex" resultType="java.lang.Integer">
         SELECT `index`
         FROM `kurly`.`cart`
-        WHERE `item_id` = #{itemId}
-          AND `is_deleted` = FALSE
+        WHERE `item_id` = #{payItemId}
+          AND `is_deleted` = false
           AND `is_checked` = 1
-        LIMIT 1
     </select>
 
 </mapper>

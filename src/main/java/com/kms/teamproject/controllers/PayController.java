@@ -37,14 +37,6 @@ public class PayController {
         return mav;
     }
 
-    @RequestMapping(value = "/record", method = RequestMethod.GET)
-    public ModelAndView getRecord() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("pay/pay-record");
-        return mav;
-
-    }
-
     @RequestMapping(value = "/noRecord", method = RequestMethod.GET)
     public ModelAndView getNoRecord() {
         ModelAndView mav = new ModelAndView();
@@ -57,7 +49,11 @@ public class PayController {
     public String submitPayment(@RequestParam Map<String, String> formData) {
         // 데이터 파싱
         List<PayLoadEntity> payLoad = new ArrayList<>();
-        int totalPrice = Integer.parseInt(formData.get("totalPrice"));
+        String totalPriceString = formData.get("totalPrice");
+        if (totalPriceString == null || totalPriceString.isEmpty()) {
+            throw new IllegalArgumentException("totalPrice 값이 없습니다.");
+        }
+        int totalPrice = Integer.parseInt(totalPriceString);
 
         // items 파싱
         int index = 0;
@@ -85,4 +81,14 @@ public class PayController {
         return response.toString();
     }
 
+
+    @RequestMapping(value = "/record", method = RequestMethod.GET)
+    public ModelAndView getRecord() {
+        ModelAndView mav = new ModelAndView();
+        List<PayLoadEntity> items = this.payService.getAllPayByCartId();
+        mav.addObject("items", items);
+        mav.setViewName("pay/pay-record");
+        return mav;
+
+    }
 }
