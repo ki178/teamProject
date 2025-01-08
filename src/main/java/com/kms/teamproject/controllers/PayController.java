@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -80,7 +82,12 @@ public class PayController {
     public ModelAndView getRecord() {
         ModelAndView mav = new ModelAndView();
         List<PayLoadEntity> items = this.payService.getAllPayByCartId();
-        mav.addObject("items", items);
+
+        // 날짜별로 묶기
+        Map<LocalDateTime, List<PayLoadEntity>> groupedItems = items.stream()
+                .collect(Collectors.groupingBy(PayLoadEntity::getPurchaseDay));
+
+        mav.addObject("items", groupedItems);
         mav.setViewName("pay/pay-record");
         return mav;
 

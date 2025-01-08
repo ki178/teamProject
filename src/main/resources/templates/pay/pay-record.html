@@ -40,17 +40,17 @@
                     <p class="no-record-text">
                         주문 내역이 없습니다.</p>
                 </div>
-                <div class="item-container" th:if="${items != null and !#lists.isEmpty(items)}" th:each="date : ${items}">
+                <div class="item-container" th:if="${items != null and !#lists.isEmpty(items)}" th:each="entry : ${items}">
                     <div class="purchase-day">
                         <div class="purchase-day-text">
-                            <p class="_text">2025-01-08</p>
+                            <p class="_text" th:text="|${#temporals.format(entry.key, 'yyyy-MM-dd HH:mm')}|">2025-01-08</p>
                             <div class="total-price-text">
-                                <p class="_text">"총금액 : 90,000원"</p>
+                                <p class="_text" >"총금액 : 90,000원"</p>
                             </div>
                         </div>
                     </div>
                     <div class="line"></div>
-                    <div class="item" th:each="item : ${items}">
+                    <div class="item" th:each="item : ${entry.value}">
                         <div class="item-box">
                             <a href="#">
                                 <img th:src="${item.getItemImage()}" th:alt="${item.getPayItemName()}" class="img">
