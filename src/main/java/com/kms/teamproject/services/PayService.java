@@ -7,7 +7,10 @@ import com.kms.teamproject.mappers.PayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -42,30 +45,46 @@ public class PayService {
 
 
 
-            List<Integer> payIndexes = this.payMapper.getPayIndexByCartIndex(item.getPayItemId());
-            if (payIndexes == null || payIndexes.isEmpty()) {
+            List<Integer> cartIndexes = this.payMapper.getPayIndexByCartIndex(item.getPayItemId());
+            if (cartIndexes == null || cartIndexes.isEmpty()) {
                 throw new IllegalStateException("해당 cartIndex에 연결된 payIndex가 없습니다: " + item.getPayItemId());
             }
 
-            for (Integer payIndex : payIndexes) {
-                item.setPayIndex(payIndex);
+
+
+            for (Integer cartIndex : cartIndexes) {
+                item.setCartIndex(cartIndex);
             }
         }
 
         if (totalPriceSum == totalPrice) {
             for (PayLoadEntity item : payload) {
                 item.setTotalPrice(totalPrice);
+
+                // 테스트를 위한
+                String testMemberId = "'test122'";
+                item.setMemberId(testMemberId);
+
+
+                item.setPurchaseDay(LocalDateTime.now());
+
+
                 this.payMapper.insertItemLoad(item);
             }
+
+
+
             return true;
         }
         return false;
     }
 
 
-
+    // Comparator :
     public List<PayLoadEntity> getAllPayByCartId(){
-        return this.payMapper.selectAllPayLoads();
+        return this.payMapper.selectAllPayLoads().stream()
+                .sorted(Comparator.comparing(PayLoadEntity::getPurchaseDay))
+                .collect(Collectors.toList());
     }
 
 

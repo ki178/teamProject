@@ -52,13 +52,34 @@
           height: 80px;
         }
 
+        > .no-item-container {
+          display: flex;
+          -webkit-box-align: center;
+          align-items: center;
+          flex-direction: column;
+          -webkit-box-pack: center;
+          justify-content: center;
+          width: 100%;
+          height: 700px;
+          background-color: #fff;
+          margin-top: 16px;
+          border-radius: 16px;
+
+          > .no-record-text {
+            margin-top: 16px;
+            color: #222;
+            line-height: 26px;
+            font-weight: 600;
+            font-size: 18px;
+          }
+        }
+
         > .item-container {
           display: grid;
           -webkit-box-align: center;
           align-items: center;
           flex-direction: column;
           -webkit-box-pack: center;
-          justify-content: center;
           width: 100%;
           height: 100%;
           background-color: #fff;
@@ -66,6 +87,51 @@
           margin-bottom: 16px;
           border-radius: 16px;
           padding: 16px 16px 20px;
+
+          >.purchase-day{
+            position: relative;
+            display: flex;
+            -webkit-box-pack: justify;
+            justify-content: space-between;
+            -webkit-box-align: center;
+            align-items: center;
+
+            >.purchase-day-text{
+              flex-shrink: 0;
+
+              >._text{
+                padding-bottom: 2px;
+                color: #222;
+                line-height: 26px;
+                font-weight: 600;
+                font-size: 18px;
+              }
+
+              > .total-price-text {
+                cursor: pointer;
+                display: flex;
+                -webkit-box-align: center;
+                align-items: center;
+
+                >._text{
+                  color: #848f9a;
+                  padding-right: 4px;
+                  line-height: 20px;
+                  font-weight: 400;
+                  font-size: 14px;
+                }
+              }
+            }
+
+          }
+
+          >.line{
+            min-width: 100%;
+            min-height: 1px;
+            margin: 16px 0 2px 0;
+            background-color: #eceff3;
+
+          }
 
 
           >.item{
@@ -169,3 +235,6 @@
     }
   }
 }
+
+
+

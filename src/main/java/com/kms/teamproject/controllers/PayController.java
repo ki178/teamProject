@@ -37,12 +37,6 @@ public class PayController {
         return mav;
     }
 
-    @RequestMapping(value = "/noRecord", method = RequestMethod.GET)
-    public ModelAndView getNoRecord() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("pay/no-pay-record");
-        return mav;
-    }
 
     @RequestMapping(value = "/submit", method = RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody

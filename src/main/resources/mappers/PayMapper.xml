@@ -5,9 +5,9 @@
 <mapper namespace="com.kms.teamproject.mappers.PayMapper">
     <insert id="insertItemLoad" parameterType="com.kms.teamproject.entities.PayLoadEntity">
         INSERT INTO `kurly`.`pay_record`
-        (`pay_index`,`pay_item_id`, `pay_item_name`, `pay_item_price`, `pay_quantity`, `item_image`, `total_price`)
+        (`cart_index`, `member_id`, `pay_item_id`, `pay_item_name`, `pay_item_price`, `pay_quantity`, `item_image`, `total_price`, `purchase_day`)
         VALUES
-            (#{payIndex}, #{payItemId}, #{payItemName}, #{payItemPrice}, #{payQuantity}, #{itemImage}, #{totalPrice});
+            (#{cartIndex}, ${memberId}, #{payItemId}, #{payItemName}, #{payItemPrice}, #{payQuantity}, #{itemImage}, #{totalPrice}, #{purchaseDay});
 
     </insert>
 
@@ -26,13 +26,14 @@
 
     <select id="selectAllPayLoads" resultType="com.kms.teamproject.entities.PayLoadEntity">
     SELECT `index` AS `index`,
-           `pay_index` AS `payIndex`,
+           `cart_index` AS `cartIndex`,
            `pay_item_id` AS `payItemId`,
            `pay_item_name` AS `payItemName`,
            `pay_item_price` AS `payItemPrice`,
            `pay_quantity` AS `payQuantity`,
            `item_image` AS `itemImage`,
-           `total_price` AS `totalPrice`
+           `total_price` AS `totalPrice`,
+           `purchase_day` AS `purchaseDay`
     FROM `kurly`.`pay_record`
     WHERE 1
     </select>
