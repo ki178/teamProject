@@ -81,10 +81,7 @@ public class PayController {
     @RequestMapping(value = "/record", method = RequestMethod.GET)
     public ModelAndView getRecord() {
         ModelAndView mav = new ModelAndView();
-        List<PayLoadEntity> items = this.payService.getAllPayByCartId();
-
-        // 날짜별로 묶기
-        Map<LocalDateTime, List<PayLoadEntity>> groupedItems = items.stream()
+        Map<LocalDateTime, List<PayLoadEntity>> groupedItems = this.payService.getAllPayByCartId().stream()
                 .collect(Collectors.groupingBy(PayLoadEntity::getPurchaseDay));
 
         mav.addObject("items", groupedItems);

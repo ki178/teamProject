@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -81,9 +82,11 @@ public class PayService {
 
 
     // Comparator : getPurchaseDay(날짜) 기준으로 정렬
-    // Collectors : 받은 결제 내역을 **리스트(List)**나 맵(Map) 형태로 묶기 위해 필요합니다.
+    // Collectors : 받은 결제 내역을 리스트(List)나 맵(Map) 형태로 묶기 위해
     public List<PayLoadEntity> getAllPayByCartId(){
-        return this.payMapper.selectAllPayLoads().stream()
+        List<PayLoadEntity> payLoadList = this.payMapper.selectAllPayLoads();
+
+        return payLoadList.stream()
                 .sorted(Comparator.comparing(PayLoadEntity::getPurchaseDay))
                 .collect(Collectors.toList());
     }

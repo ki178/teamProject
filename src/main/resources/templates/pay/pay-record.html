@@ -45,7 +45,7 @@
                         <div class="purchase-day-text">
                             <p class="_text" th:text="|${#temporals.format(entry.key, 'yyyy-MM-dd HH:mm')}|">2025-01-08</p>
                             <div class="total-price-text">
-                                <p class="_text" >"총금액 : 90,000원"</p>
+                                <p class="_text" th:text="|총금액 : ${#numbers.formatInteger(entry.value[0].totalPrice, 3, 'COMMA')}원|">"총금액 : 90,000원"</p>
                             </div>
                         </div>
                     </div>
